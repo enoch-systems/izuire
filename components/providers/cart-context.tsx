@@ -109,7 +109,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
       isNewItem = true
       return [...currentItems, { ...newItem, quantity: 1 }]
     })
-    setIsOpen(true)
     toast.success(`${newItem.name} added to cart`, {
       description: "You can review your cart before checkout",
       duration: 2500,

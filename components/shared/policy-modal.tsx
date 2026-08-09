@@ -13,13 +13,13 @@ interface PolicyModalProps {
 const content: Record<ModalType, { title: string; body: string }> = {
   privacy: {
     title: "Privacy Policy",
-    body: `Your privacy is important to us. At Ammie N, we are committed to protecting the personal information you share with us.
+    body: `Your privacy is important to us. At IZUIRE, we are committed to protecting the personal information you share with us.
 
 Information We Collect
 We collect information you provide directly to us, such as your name, email address, phone number, and shipping address when you place an order or contact us. We also automatically collect certain data when you visit our site, including your IP address, browser type, and browsing behavior.
 
 How We Use Your Information
-We use your information to process orders, improve your shopping experience, send updates about your order, and provide customer support. With your consent, we may also send promotional emails about new products or offers.
+We use your information to process orders, improve your sourcing experience, send updates about your order, and provide customer support. With your consent, we may also send information about new thrift stock arrivals or sourcing offers.
 
 Data Security
 Your data is secured using industry-standard encryption and security protocols. We do not sell, trade, or share your personal information with third parties except as necessary to fulfill your orders (e.g., shipping carriers) or as required by law.
@@ -41,28 +41,28 @@ If you have questions about this Privacy Policy, please contact us at +234903156
   },
   terms: {
     title: "Terms of Service",
-    body: `Welcome to Ammie N. By using our website and purchasing our products, you agree to the following terms and conditions.
+    body: `Welcome to IZUIRE. By using our website and purchasing our thrift bales, you agree to the following terms and conditions.
 
 General
 All products displayed on our website are subject to availability. We reserve the right to modify or discontinue any product without prior notice. Prices are subject to change without notice.
 
 Orders
-When you place an order, you agree to provide accurate and complete information. We reserve the right to cancel or refuse any order at our discretion. Order confirmation does not constitute acceptance of the order until payment has been processed.
+When you place an order, you agree to provide accurate and complete information. Minimum order is 2 bales. We reserve the right to cancel or refuse any order at our discretion. Order confirmation does not constitute acceptance of the order until payment has been processed.
 
 Payments
-We accept major credit cards, debit cards, and other payment methods as displayed at checkout. Payment is due at the time of purchase. All transactions are processed securely through trusted payment gateways.
+We accept bank transfers, Western Union, and other payment methods as displayed at checkout. A 50% deposit is required to begin sourcing, with the remaining 50% due before shipping. All transactions are processed securely.
+
+Quality & Inspection
+Every bale is inspected and graded before shipping. We provide photos and videos of your items before dispatch. If items are received damaged or incorrectly graded, contact us within 48 hours of delivery with photos for replacement or refund.
 
 Intellectual Property
-All content on this website — including text, images, logos, and designs — is the property of Ammie N and is protected by copyright laws. You may not reproduce, distribute, or use any content without our written permission.
+All content on this website — including text, images, logos, and designs — is the property of IZUIRE and is protected by copyright laws. You may not reproduce, distribute, or use any content without our written permission.
 
 User Conduct
 You agree not to use our website for any unlawful purpose or in any way that could damage, disable, or impair the site. You may not attempt to gain unauthorized access to any part of our systems.
 
 Limitation of Liability
-Ammie N shall not be held liable for any indirect, incidental, or consequential damages arising from the use or inability to use our products or website, to the fullest extent permitted by law.
-
-Product Care
-Hair products require proper care to maintain quality. Follow the care instructions provided with your purchase. Ammie N is not responsible for damage resulting from improper care or handling.
+IZUIRE shall not be held liable for any indirect, incidental, or consequential damages arising from the use or inability to use our products or website, to the fullest extent permitted by law.
 
 Modifications
 We reserve the right to update these terms at any time. Changes will be effective immediately upon posting. Continued use of the site after changes constitutes acceptance of the new terms.
@@ -72,28 +72,28 @@ These terms are governed by the laws of the Federal Republic of Nigeria. Any dis
   },
   shipping: {
     title: "Shipping Policy",
-    body: `At Ammie N, we strive to deliver your orders promptly and safely.
+    body: `At IZUIRE, we deliver thrift bales to customers across Africa and beyond.
 
 Processing Time
-Orders are processed within 1–3 business days after payment confirmation. Orders placed on weekends or public holidays will be processed on the next business day.
+Orders are processed within 1–3 business days after payment confirmation. Sourcing typically takes 5-7 business days. Orders placed on weekends or public holidays will be processed on the next business day.
 
 Shipping Methods & Delivery
-We offer reliable shipping options tailored to your location. Estimated delivery times vary based on your region and selected shipping method at checkout.
+We offer sea freight and air freight options based on your location. Sea freight typically takes 15-30 days, while air freight takes 5-7 days. Estimated delivery times vary based on your region.
 
 Shipping Rates
-Shipping costs are calculated at checkout based on your delivery address and chosen shipping method. Free shipping may be available on qualifying orders as advertised.
+Shipping costs are calculated based on your delivery address, bale weight, and chosen shipping method. Contact us for specific quotes to your destination.
 
 Order Tracking
-Once your order is shipped, you will receive a confirmation email with a tracking number. You can track your package directly through the carrier's website.
+Once your order is shipped, you will receive a confirmation with tracking information. You can track your package directly through the carrier's website.
+
+Customs & Duties
+International orders may be subject to customs duties, taxes, and import fees. These are the responsibility of the customer. We assist with documentation to ensure smooth clearance.
 
 Delivery Issues
-If your package is lost or damaged during transit, please contact us within 48 hours of delivery. We will work with the carrier to resolve the issue promptly.
-
-International Shipping
-International orders may be subject to customs duties, taxes, and import fees. These are the responsibility of the customer and are not included in the purchase price.
+If your package is lost or damaged during transit, please contact us within 48 hours of expected delivery. We will work with the carrier to resolve the issue promptly.
 
 Address Accuracy
-Please ensure your shipping address is correct at the time of order. Ammie N is not responsible for packages delivered to an incorrect address provided by the customer.
+Please ensure your shipping address is correct at the time of order. IZUIRE is not responsible for packages delivered to an incorrect address provided by the customer.
 
 Contact
 For any shipping-related inquiries, reach out to us at +2349031560905 {WhatsApp}.`

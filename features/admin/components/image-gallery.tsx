@@ -220,7 +220,7 @@ export default function ImageGallery({ images, selectedImageIndex, onSelectImage
               </div>
               <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-green-500 boty-transition"
+                  className="h-full bg-primary boty-transition"
                   style={{ width: `${(uploadProgress.current / uploadProgress.total) * 100}%` }}
                 />
               </div>

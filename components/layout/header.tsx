@@ -26,70 +26,48 @@ export function Header({ variant = "default", onLogoutClick }: { variant?: "defa
     }
   }, [isMenuOpen])
 
-  return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-4 pt-4">
-      {/* Mobile menu backdrop */}
-      {isMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black/20 z-40 lg:hidden"
-          onClick={() => setIsMenuOpen(false)}
-        />
-      )}
-      <nav className="relative z-50 max-w-7xl mx-auto px-6 lg:px-8 backdrop-blur-md rounded-lg py-0 my-0 animate-scale-fade-in bg-[rgba(255,255,255,0.4)] border border-[rgba(255,255,255,0.32)]" style={{ boxShadow: 'rgba(0, 0, 0, 0.1) 0px 10px 50px' }}>
-        <div className="relative z-50 flex items-center justify-between h-[68px]">
-          {/* Mobile menu button */}
+   return (
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background">
+      <nav className="relative z-50 max-w-[1140px] mx-auto px-6">
+        <div className="relative z-50 flex items-center justify-between py-[18px]">
+          {/* Logo - Only show on non-admin pages */}
           {!isAdmin && (
-            <button
-              type="button"
-              className="lg:hidden p-2 text-foreground/80 hover:text-foreground boty-transition cursor-pointer"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              aria-label="Toggle menu"
-            >
-              {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
+            <Link href="/" className="flex items-center gap-2.5">
+              <h1 className="font-serif text-[1.3rem] tracking-[0.5px] text-foreground">IZUIRE</h1>
+              <span className="bg-primary text-background font-mono text-[0.7rem] px-2 py-[3px] -rotate-3 rounded-[2px]">
+                THRIFT
+              </span>
+            </Link>
           )}
 
-          {/* Desktop Navigation - Left */}
+          {/* Desktop Navigation - Center */}
           {!isAdmin && (
             <div className="hidden lg:flex items-center gap-8">
               <Link
                 href="/"
-                className="text-sm tracking-wide text-foreground/70 hover:text-foreground boty-transition"
+                className="font-mono text-[0.78rem] uppercase tracking-[0.08em] text-foreground/70 hover:text-foreground boty-transition"
               >
                 Home
               </Link>
               <Link
                 href="/shop"
-                className="text-sm tracking-wide text-foreground/70 hover:text-foreground boty-transition"
+                className="font-mono text-[0.78rem] uppercase tracking-[0.08em] text-foreground/70 hover:text-foreground boty-transition"
               >
                 Shop
               </Link>
               <Link
                 href="/#reviews"
-                className="text-sm tracking-wide text-foreground/70 hover:text-foreground boty-transition"
+                className="font-mono text-[0.78rem] uppercase tracking-[0.08em] text-foreground/70 hover:text-foreground boty-transition"
               >
                 Reviews
               </Link>
               <Link
                 href="/faq"
-                className="text-sm tracking-wide text-foreground/70 hover:text-foreground boty-transition"
+                className="font-mono text-[0.78rem] uppercase tracking-[0.08em] text-foreground/70 hover:text-foreground boty-transition"
               >
                 FAQ
               </Link>
-              <Link
-                href="/contact"
-                className="text-sm tracking-wide text-foreground/70 hover:text-foreground boty-transition"
-              >
-                Contact
-              </Link>
             </div>
-          )}
-
-          {/* Logo - Only show on non-admin pages */}
-          {!isAdmin && (
-            <Link href="/" className="absolute left-1/2 -translate-x-1/2">
-              <h1 className="font-serif text-xl sm:text-2xl md:text-3xl tracking-wider text-foreground">Ammie N</h1>
-            </Link>
           )}
 
           {/* Right Actions */}
@@ -98,7 +76,7 @@ export function Header({ variant = "default", onLogoutClick }: { variant?: "defa
               <button
                 type="button"
                 onClick={() => setSearchOpen(true)}
-                className="p-2 text-foreground/70 hover:text-foreground boty-transition cursor-pointer"
+                className="hidden lg:block p-2 text-foreground/70 hover:text-foreground boty-transition cursor-pointer"
                 aria-label="Search"
               >
                 <Search className="w-5 h-5" />
@@ -116,6 +94,24 @@ export function Header({ variant = "default", onLogoutClick }: { variant?: "defa
                   </span>
                 )}
               </button>
+              {/* Desktop-only action buttons - hidden on mobile */}
+              <div className="hidden lg:flex items-center gap-3">
+                <Link href="/shop" className="ed-btn ed-btn-ghost">
+                  View Stock
+                </Link>
+                <Link href="/contact" className="ed-btn ed-btn-primary">
+                  Contact Us
+                </Link>
+              </div>
+              {/* Mobile hamburger - right side */}
+              <button
+                type="button"
+                className="lg:hidden p-2 text-foreground/80 hover:text-foreground boty-transition cursor-pointer"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                aria-label="Toggle menu"
+              >
+                {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
             </div>
           ) : (
             <div className="flex items-center gap-2 ml-auto">
@@ -131,53 +127,91 @@ export function Header({ variant = "default", onLogoutClick }: { variant?: "defa
           )}
         </div>
 
-        {/* Mobile Navigation */}
-        {!isAdmin && (
+      </nav>
+
+      {/* Mobile Navigation Modal - outside nav for proper fixed positioning */}
+      {!isAdmin && (
+        <div
+          className={`lg:hidden fixed inset-0 z-[70] flex items-start justify-center pt-24 px-6 ${
+            isMenuOpen ? "pointer-events-auto" : "pointer-events-none"
+          }`}
+        >
+          {/* Backdrop */}
           <div
-            className={`lg:hidden overflow-hidden boty-transition relative z-[60] ${
-              isMenuOpen ? "max-h-120 pb-6 pointer-events-auto" : "max-h-0 pointer-events-none"
+            className={`absolute inset-0 bg-black/40 backdrop-blur-sm boty-transition ${
+              isMenuOpen ? "opacity-100" : "opacity-0"
+            }`}
+            onClick={() => setIsMenuOpen(false)}
+          />
+          
+          {/* Modal Content */}
+          <div
+            className={`relative bg-background rounded-2xl max-w-sm w-full boty-shadow border border-border/50 p-8 boty-transition ${
+              isMenuOpen ? "opacity-100 scale-100" : "opacity-0 scale-95"
             }`}
           >
-          <div className="flex flex-col gap-14 pt-4 border-t border-border/50">
-            <Link
-              href="/"
+            {/* Close button */}
+            <button
+              type="button"
               onClick={() => setIsMenuOpen(false)}
-              className="relative z-[60] text-sm tracking-wide text-foreground/70 hover:text-foreground boty-transition cursor-pointer"
+              className="absolute top-4 right-4 p-2 text-foreground/70 hover:text-foreground boty-transition cursor-pointer"
+              aria-label="Close menu"
             >
-              Home
-            </Link>
-            <Link
-              href="/shop"
-              onClick={() => setIsMenuOpen(false)}
-              className="relative z-[60] text-sm tracking-wide text-foreground/70 hover:text-foreground boty-transition cursor-pointer"
-            >
-              Shop
-            </Link>
-            <Link
-              href="/#reviews"
-              onClick={() => setIsMenuOpen(false)}
-              className="relative z-[60] text-sm tracking-wide text-foreground/70 hover:text-foreground boty-transition cursor-pointer"
-            >
-              Reviews
-            </Link>
-            <Link
-              href="/faq"
-              onClick={() => setIsMenuOpen(false)}
-              className="relative z-[60] text-sm tracking-wide text-foreground/70 hover:text-foreground boty-transition cursor-pointer"
-            >
-              FAQ
-            </Link>
-            <Link
-              href="/contact"
-              onClick={() => setIsMenuOpen(false)}
-              className="relative z-[60] text-sm tracking-wide text-foreground/70 hover:text-foreground boty-transition cursor-pointer"
-            >
-              Contact
-            </Link>
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Navigation Links */}
+            <div className="flex flex-col gap-6 mb-8">
+              <Link
+                href="/"
+                onClick={() => setIsMenuOpen(false)}
+                className="font-mono text-[0.85rem] uppercase tracking-[0.08em] text-foreground/70 hover:text-foreground boty-transition cursor-pointer text-center"
+              >
+                Home
+              </Link>
+              <Link
+                href="/shop"
+                onClick={() => setIsMenuOpen(false)}
+                className="font-mono text-[0.85rem] uppercase tracking-[0.08em] text-foreground/70 hover:text-foreground boty-transition cursor-pointer text-center"
+              >
+                Shop
+              </Link>
+              <Link
+                href="/#reviews"
+                onClick={() => setIsMenuOpen(false)}
+                className="font-mono text-[0.85rem] uppercase tracking-[0.08em] text-foreground/70 hover:text-foreground boty-transition cursor-pointer text-center"
+              >
+                Reviews
+              </Link>
+              <Link
+                href="/faq"
+                onClick={() => setIsMenuOpen(false)}
+                className="font-mono text-[0.85rem] uppercase tracking-[0.08em] text-foreground/70 hover:text-foreground boty-transition cursor-pointer text-center"
+              >
+                FAQ
+              </Link>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col gap-3">
+              <Link 
+                href="/shop" 
+                onClick={() => setIsMenuOpen(false)} 
+                className="ed-btn ed-btn-ghost w-full justify-center"
+              >
+                View Stock
+              </Link>
+              <Link
+                href="/contact"
+                onClick={() => setIsMenuOpen(false)}
+                className="ed-btn ed-btn-primary w-full justify-center"
+              >
+                Contact Us
+              </Link>
+            </div>
           </div>
-          </div>
-        )}
-      </nav>
+        </div>
+      )}
 
       {/* Logout Confirmation Modal */}
       {isAdmin && showLogoutModal && onLogoutClick && (

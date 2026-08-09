@@ -480,7 +480,7 @@ export default function ReviewDetailPage({ params }: { params: Promise<{ id: str
                     <h1 className="text-xl font-bold text-foreground">{review.customerName}</h1>
                     <div className="flex items-center gap-0.5">
                       {[...Array(review.rating)].map((_, i) => (
-                        <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        <Star key={i} className="h-4 w-4 fill-primary text-primary" />
                       ))}
                     </div>
                   </div>

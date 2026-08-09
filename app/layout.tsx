@@ -1,6 +1,6 @@
 import React from "react"
 import type { Metadata, Viewport } from 'next'
-import { DM_Sans, Playfair_Display } from 'next/font/google'
+import { Archivo_Black, Inter, JetBrains_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { CartProvider } from '@/components/providers/cart-context'
 import { SearchBlurProvider } from '@/components/providers/search-blur-context'
@@ -10,23 +10,29 @@ import { QueryProvider } from '@/components/providers/query-provider'
 import { LenisProvider } from '@/components/providers/lenis-provider'
 import './globals.css'
 
-const dmSans = DM_Sans({ 
+const inter = Inter({ 
   subsets: ["latin"],
-  variable: '--font-dm-sans',
-  weight: ['300', '400', '500', '600']
+  variable: '--font-inter',
+  weight: ['400', '500', '600', '700']
 });
 
-const playfairDisplay = Playfair_Display({ 
+const archivoBlack = Archivo_Black({ 
   subsets: ["latin"],
-  variable: '--font-playfair',
+  variable: '--font-archivo-black',
+  weight: ['400']
+});
+
+const jetBrainsMono = JetBrains_Mono({ 
+  subsets: ["latin"],
+  variable: '--font-jetbrains-mono',
   weight: ['400', '500', '600', '700']
 });
 
 export const metadata: Metadata = {
-  title: 'Ammie N — Premium Hair & Extensions',
-  description: 'Premium wigs, lace fronts, and hair extensions. Wear confidence with Ammie N.',
+  title: 'IZUIRE — Premium Thrift Bales from China',
+  description: 'Your trusted partner for sourcing premium thrift bales from China. Quality inspection, grading, and global shipping to Africa and beyond.',
   generator: 'v0.app',
-  keywords: ['wigs', 'hair extensions', 'lace frontals', 'human hair', 'beauty', 'hair care', 'lace wigs'],
+  keywords: ['thrift bales', 'china sourcing', 'quality inspection', 'thrift wholesale', 'clothing bales', 'reseller'],
   icons: {
     icon: 'https://res.cloudinary.com/deafv5ovi/image/upload/v1784555201/a_dow3yp.png',
     apple: 'https://res.cloudinary.com/deafv5ovi/image/upload/v1784555201/a_dow3yp.png',
@@ -34,7 +40,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#F7F4EF',
+  themeColor: '#F7F3EC',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
@@ -48,7 +54,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${dmSans.variable} ${playfairDisplay.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${archivoBlack.variable} ${jetBrainsMono.variable} font-sans antialiased`}>
         <QueryProvider>
           <CartProvider>
             <SearchBlurProvider>

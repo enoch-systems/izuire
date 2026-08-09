@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Search, X } from "lucide-react"
-import { useProducts } from "@/hooks/use-products"
+import { hardcodedProducts } from "@/lib/hardcoded-products"
 
 interface SearchOverlayProps {
   isOpen: boolean
@@ -14,7 +14,6 @@ interface SearchOverlayProps {
 export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   const [query, setQuery] = useState("")
   const inputRef = useRef<HTMLInputElement>(null)
-  const { data: products = [] } = useProducts()
 
   useEffect(() => {
     if (isOpen) {
@@ -25,10 +24,11 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   }, [isOpen])
 
   const filtered = query.trim()
-    ? products.filter(
+    ? hardcodedProducts.filter(
         (p) =>
           p.name.toLowerCase().includes(query.toLowerCase()) ||
-          p.category.toLowerCase().includes(query.toLowerCase())
+          p.category.toLowerCase().includes(query.toLowerCase()) ||
+          p.description.toLowerCase().includes(query.toLowerCase())
       )
     : []
 
@@ -69,7 +69,7 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search wigs, lace, extensions..."
+                  placeholder="Search thrift bales, fabrics, shoes..."
                   className="w-full bg-card border border-border/50 rounded-xl sm:rounded-2xl pl-12 sm:pl-14 pr-12 sm:pr-14 py-3.5 sm:py-4 text-base sm:text-lg text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 boty-transition boty-shadow"
                 />
                 {query && (
@@ -115,14 +115,14 @@ export function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                               <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium flex-shrink-0 ${
                                 product.badge === "Sale" ? "text-red-500 bg-red-50 dark:bg-red-950/30" :
                                 product.badge === "New" ? "text-primary bg-primary/10" :
-                                "text-amber-600 bg-amber-50 dark:bg-amber-950/30"
+                                "text-primary bg-primary/10"
                               }`}>
                                 {product.badge}
                               </span>
                             )}
                           </div>
                           <p className="text-xs sm:text-sm text-muted-foreground truncate">
-                            Premium quality hair product
+                            {product.description}
                           </p>
                           <p className="text-xs sm:text-sm font-medium text-foreground">
                             {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(Number(product.price) || 0)}

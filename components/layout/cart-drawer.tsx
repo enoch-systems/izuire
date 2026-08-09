@@ -193,20 +193,28 @@ export function CartDrawer() {
       <Drawer
         open={isOpen}
         onOpenChange={handleOpenChange}
-        direction={isMobile ? "bottom" : "right"}
+        direction="right"
       >
         <DrawerContent
           className={
             isMobile
-              ? "h-[85vh] max-h-[85vh] rounded-t-3xl border-t"
+              ? "h-full w-full max-w-[85vw] sm:max-w-[440px]"
               : "h-full w-full sm:max-w-[440px]"
           }
         >
           {isMobile && (
-            <div className="mx-auto mt-3 mb-1 h-1.5 w-12 shrink-0 rounded-full bg-muted-foreground/30" />
+            <DrawerClose asChild>
+              <button
+                type="button"
+                className="absolute top-3 left-3 w-8 h-8 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground boty-transition"
+                aria-label="Close cart"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </DrawerClose>
           )}
 
-          <DrawerHeader className="border-b border-border/50 p-4 sm:p-6 py-2.5">
+          <DrawerHeader className="border-b border-border/50 p-4 sm:p-6 pt-15">
             <DrawerTitle className="font-serif text-xl sm:text-2xl">Cart</DrawerTitle>
             <DrawerDescription>{itemCount} {itemCount === 1 ? 'item' : 'items'}</DrawerDescription>
           </DrawerHeader>
@@ -239,7 +247,7 @@ export function CartDrawer() {
                         {item.name}
                       </h3>
                       <p className="text-muted-foreground mb-2 sm:mb-3 text-xs sm:text-sm">
-                        Premium quality hair product
+                        Premium thrift bale
                       </p>
                       <div className="flex items-center gap-2 sm:gap-3">
                         <div className="flex items-center border border-border rounded-full">

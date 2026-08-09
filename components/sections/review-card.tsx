@@ -134,7 +134,7 @@ export function ReviewCard({ review, onViewMore, actionLabel = "View More" }: Re
             <p className="text-[10px] md:text-xs text-muted-foreground mb-0.5">{normalizedReview.location}</p>
             <div className="flex items-center gap-0.5">
               {[...Array(normalizedReview.rating)].map((_, i) => (
-                <Star key={i} className="w-1.5 h-1.5 md:w-3 md:h-3 fill-yellow-400 text-yellow-400" />
+                <Star key={i} className="w-1.5 h-1.5 md:w-3 md:h-3 fill-primary text-primary" />
               ))}
             </div>
           </div>

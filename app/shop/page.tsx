@@ -4,15 +4,12 @@ import { useState, useEffect, useMemo, useRef, Suspense, useCallback } from "rea
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { ShoppingBag, ChevronLeft, ChevronRight } from "lucide-react"
-import { useQueryClient } from "@tanstack/react-query"
+import { ShoppingBag, ChevronLeft, ChevronRight, ChevronDown, SlidersHorizontal, X, ArrowUpRight, Sparkles, Package, Truck, ShieldCheck } from "lucide-react"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { useCart } from "@/components/providers/cart-context"
-import { useProducts, type ShopProduct } from "@/hooks/use-products"
-import { supabase } from "@/lib/supabase"
-
-const categories = ["all", "wigs", "extensions", "lace"]
+import { useFlyToCart } from "@/hooks/use-fly-to-cart"
+import { hardcodedProducts, featuredProducts, categories, type HardcodedProduct } from "@/lib/hardcoded-products"
 
 const formatUsdPrice = (value: number | string) =>
   new Intl.NumberFormat("en-US", {
@@ -22,22 +19,32 @@ const formatUsdPrice = (value: number | string) =>
     maximumFractionDigits: 2,
   }).format(Number(value) || 0)
 
+const sortOptions = [
+  { label: "Featured", value: "featured" },
+  { label: "Price: Low to High", value: "price-asc" },
+  { label: "Price: High to Low", value: "price-desc" },
+  { label: "Name: A-Z", value: "name-asc" },
+]
+
 function ProductCard({ 
   product, 
   index, 
   isVisible 
 }: { 
-  product: ShopProduct
+  product: HardcodedProduct
   index: number
   isVisible: boolean
 }) {
   const [imageLoaded, setImageLoaded] = useState(false)
   const { addItem } = useCart()
+  const flyToCart = useFlyToCart()
+  const imageRef = useRef<HTMLDivElement>(null)
 
   const handleAdd = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault()
       e.stopPropagation()
+      flyToCart(imageRef.current, product.image)
       addItem({
         id: product.id,
         name: product.name,
@@ -45,7 +52,7 @@ function ProductCard({
         image: product.image,
       })
     },
-    [addItem, product.id, product.name, product.price, product.image]
+    [addItem, flyToCart, product.id, product.name, product.price, product.image]
   )
 
   return (
@@ -56,9 +63,9 @@ function ProductCard({
       }`}
       style={{ transitionDelay: `${index * 80}ms` }}
     >
-      <div className="bg-background rounded-3xl overflow-hidden boty-shadow boty-transition group-hover:scale-[1.02]">
+      <div className="bg-card rounded-2xl overflow-hidden boty-shadow boty-transition group-hover:scale-[1.02] group-hover:shadow-xl relative">
         {/* Image */}
-        <div className="relative aspect-square bg-muted overflow-hidden">
+        <div ref={imageRef} className="relative aspect-[4/5] bg-muted overflow-hidden">
           {/* Skeleton */}
           <div 
             className={`absolute inset-0 bg-gradient-to-br from-muted via-muted/50 to-muted animate-pulse transition-opacity duration-500 ${
@@ -71,42 +78,45 @@ function ProductCard({
             alt={product.name}
             fill
             sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className={`object-cover boty-transition group-hover:scale-105 transition-opacity duration-500 ${
+            className={`object-cover boty-transition group-hover:scale-110 transition-opacity duration-500 ${
               imageLoaded ? 'opacity-100' : 'opacity-0'
             }`}
             onLoad={() => setImageLoaded(true)}
           />
+          
           {/* Badge */}
           {product.badge && (
-            <span
-              className={`absolute top-4 left-4 px-3 py-1 rounded-full text-xs tracking-wide backdrop-blur-sm bg-white/70 ${
-                product.badge === "Sale"
-                  ? "text-red-600"
-                  : product.badge === "New"
-                  ? "text-primary"
-                  : "text-black"
-              }`}
-            >
+            <span className="absolute top-4 left-4 px-3 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase backdrop-blur-sm bg-white/80 text-foreground boty-shadow">
               {product.badge}
             </span>
           )}
+
+          {/* Quick add overlay */}
+          <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 boty-transition">
+            <button
+              type="button"
+              onClick={handleAdd}
+              className="w-full inline-flex items-center justify-center gap-2 bg-foreground text-background px-4 py-3 rounded-xl text-xs font-bold tracking-widest uppercase boty-transition hover:bg-primary hover:text-primary-foreground boty-shadow"
+            >
+              <ShoppingBag className="w-4 h-4" />
+              Add to Cart
+            </button>
+          </div>
         </div>
 
         {/* Info */}
-        <div className="p-3 md:p-5 pb-4">
-          <h3 className="font-serif text-sm md:text-lg text-foreground mb-0.5 md:mb-1">{product.name}</h3>
-          <p className="text-xs md:text-sm text-muted-foreground mb-2 md:mb-3 line-clamp-2">{product.description ? product.description.split(' ').slice(0, 7).join(' ') + (product.description.split(' ').length > 7 ? '...' : '') : 'Premium quality hair product'}</p>
-          <div className="flex items-center gap-2 mb-2 md:mb-4">
-            <span className="text-xs md:text-base font-medium text-foreground">{formatUsdPrice(product.price)}</span>
+        <div className="p-4 md:p-5">
+          <div className="flex items-start justify-between gap-2 mb-2">
+            <h3 className="font-serif text-sm md:text-base text-foreground leading-snug">{product.name}</h3>
+            <ArrowUpRight className="w-4 h-4 text-muted-foreground flex-shrink-0 group-hover:text-primary boty-transition" />
           </div>
-          <button
-            type="button"
-            onClick={handleAdd}
-            className="w-full inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-3 py-1.5 md:px-4 md:py-2.5 rounded-full text-[10px] md:text-xs tracking-wide boty-transition hover:bg-primary/90 boty-shadow"
-          >
-            <ShoppingBag className="w-3 h-3 md:w-3.5 md:h-3.5" />
-            Add to Cart
-          </button>
+          <p className="text-xs text-muted-foreground mb-3 line-clamp-2">{product.description}</p>
+          <div className="flex items-center justify-between">
+            <span className="font-mono text-sm md:text-base font-bold text-foreground">{formatUsdPrice(product.price)}</span>
+            <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-mono">
+              {product.category}
+            </span>
+          </div>
         </div>
       </div>
     </Link>
@@ -116,71 +126,94 @@ function ProductCard({
 function ShopPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const queryClient = useQueryClient()
 
-  const { data: products = [], isLoading: loading } = useProducts()
-  
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get("category") || "all")
+  const [sortBy, setSortBy] = useState("featured")
   const [isVisible, setIsVisible] = useState(false)
   const [currentPage, setCurrentPage] = useState(Number(searchParams.get("page")) || 1)
   const [windowWidth, setWindowWidth] = useState(0)
+  const [isSortOpen, setIsSortOpen] = useState(false)
+  const [isFilterOpen, setIsFilterOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
   const gridRef = useRef<HTMLDivElement>(null)
-  const topPaginationRef = useRef<HTMLDivElement>(null)
+  const sortRef = useRef<HTMLDivElement>(null)
 
-  // Real-time subscription: invalidate cache on any product change
+  // Close dropdowns on outside click
   useEffect(() => {
-    const channel = supabase
-      .channel("shop-products-changes")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "products" },
-        () => {
-          queryClient.invalidateQueries({ queryKey: ["products"] })
-        },
-      )
-      .subscribe()
-
-    return () => {
-      supabase.removeChannel(channel)
+    const handleClickOutside = (e: MouseEvent) => {
+      if (sortRef.current && !sortRef.current.contains(e.target as Node)) {
+        setIsSortOpen(false)
+      }
     }
-  }, [queryClient])
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
-  const filteredProducts = selectedCategory === "all"
-    ? products
-    : products.filter(p => p.category === selectedCategory)
+  // Filter and sort products
+  const filteredProducts = useMemo(() => {
+    let products = selectedCategory === "all"
+      ? hardcodedProducts
+      : hardcodedProducts.filter(p => p.category === selectedCategory)
+
+    // Search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim()
+      products = products.filter(p => 
+        p.name.toLowerCase().includes(query) ||
+        p.description.toLowerCase().includes(query) ||
+        p.category.toLowerCase().includes(query)
+      )
+    }
+
+    switch (sortBy) {
+      case "price-asc":
+        products = [...products].sort((a, b) => a.price - b.price)
+        break
+      case "price-desc":
+        products = [...products].sort((a, b) => b.price - a.price)
+        break
+      case "name-asc":
+        products = [...products].sort((a, b) => a.name.localeCompare(b.name))
+        break
+      default:
+        // Featured first
+        products = [...products].sort((a, b) => {
+          const aFeatured = a.badge ? 1 : 0
+          const bFeatured = b.badge ? 1 : 0
+          return bFeatured - aFeatured
+        })
+    }
+    return products
+  }, [selectedCategory, sortBy, searchQuery])
 
   // Track window width for responsive products per page
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth)
-    handleResize() // Set initial width
+    handleResize()
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
   // Calculate products per page based on screen size
   const productsPerPage = useMemo(() => {
-    if (windowWidth < 768) return 10 // Mobile
-    if (windowWidth < 1024) return 12 // Tablet (md)
-    return 15 // Desktop (lg and above)
+    if (windowWidth < 768) return 8
+    if (windowWidth < 1024) return 12
+    return 16
   }, [windowWidth])
 
-  // Calculate total pages
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage)
 
-  // Get current page products
   const currentProducts = useMemo(() => {
     const startIndex = (currentPage - 1) * productsPerPage
     const endIndex = startIndex + productsPerPage
     return filteredProducts.slice(startIndex, endIndex)
   }, [filteredProducts, currentPage, productsPerPage])
 
-  // Calculate visible page numbers (max 3 at a time)
   const getVisiblePages = () => {
-    const delta = 1 // Show 1 page before and after current page (total 3)
+    const delta = 1
     let start = Math.max(1, currentPage - delta)
     let end = Math.min(totalPages, currentPage + delta)
     
-    // Adjust if we're at the start or end
     if (currentPage === 1) {
       end = Math.min(totalPages, 3)
     } else if (currentPage === totalPages) {
@@ -192,14 +225,11 @@ function ShopPageContent() {
 
   const visiblePages = getVisiblePages()
 
-  // Handle page change with scroll to top of shop page
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
-    // Scroll to the top of the shop page content
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  // Update URL when category or page changes
   useEffect(() => {
     const params = new URLSearchParams()
     if (selectedCategory !== "all") {
@@ -212,10 +242,9 @@ function ShopPageContent() {
     router.push(newUrl, { scroll: false })
   }, [selectedCategory, currentPage, router])
 
-  // Reset to page 1 when category changes
   useEffect(() => {
     setCurrentPage(1)
-  }, [selectedCategory])
+  }, [selectedCategory, sortBy])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -238,68 +267,226 @@ function ShopPageContent() {
     }
   }, [])
 
-  // Reset animation when category changes
   useEffect(() => {
     setIsVisible(false)
     const timer = setTimeout(() => setIsVisible(true), 50)
     return () => clearTimeout(timer)
-  }, [selectedCategory])
-
-  if (loading) {
-    return (
-      <main className="min-h-screen overflow-x-hidden">
-        <Header />
-        <div className="pt-28 pb-20">
-          <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="text-center py-12">
-              <div className="text-lg text-muted-foreground">Loading products...</div>
-            </div>
-          </div>
-        </div>
-      </main>
-    )
-  }
+  }, [selectedCategory, sortBy])
 
   return (
     <main className="min-h-screen overflow-x-hidden">
       <Header />
+
+      {/* Back button */}
+      <div className="pt-6">
+        <div className="max-w-[1140px] mx-auto px-6">
+          <button
+            type="button"
+            onClick={() => window.history.back()}
+            className="inline-flex items-center gap-1.5 font-mono text-[0.78rem] uppercase tracking-[0.08em] text-foreground/70 hover:text-foreground boty-transition cursor-pointer"
+          >
+            <ChevronLeft className="w-4 h-4" />
+            Back
+          </button>
+        </div>
+      </div>
+
+      {/* Header */}
+      <div className="max-w-[1140px] mx-auto px-6 pt-8 pb-6">
+        <div className="max-w-2xl">
+          <div className="eyebrow font-mono text-[0.78rem] uppercase tracking-[0.18em] text-primary mb-4 flex items-center gap-2.5">
+            <span className="w-7 h-[2px] bg-primary inline-block" />
+            Shop
+          </div>
+          <h1 className="font-serif text-[clamp(2.4rem,6vw,4.2rem)] leading-[1.04] tracking-[-0.01em] mb-5">
+            Premium <em className="not-italic text-primary">Thrift Bales</em>
+          </h1>
+          <p className="text-[1.05rem] text-foreground/70 max-w-[520px]">
+            Browse our curated collection of high-quality thrift bales, sorted and graded for resale success.
+          </p>
+          
+          {/* Search Bar */}
+          <div className="mt-6 max-w-xl">
+            <div className="relative">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search bales by name, category..."
+                className="w-full bg-card border border-border rounded-xl pl-12 pr-4 py-3.5 text-[0.95rem] text-foreground placeholder:text-foreground/35 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+              />
+              <svg
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
       
-      <div className="pt-28 pb-20">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          {/* Page Header */}
-          <div className="text-center mb-12 md:mb-16">
-            <h1 className="font-serif text-4xl md:text-6xl text-foreground mb-4">Shop</h1>
+      {/* Featured Products */}
+      <section className="border-b border-border">
+        <div className="max-w-[1140px] mx-auto px-6 py-16">
+          <div className="flex items-end justify-between mb-10">
+            <div>
+              <div className="eyebrow font-mono text-[0.78rem] uppercase tracking-[0.18em] text-primary mb-3 flex items-center gap-2.5">
+                <span className="w-7 h-[2px] bg-primary inline-block" />
+                Handpicked
+              </div>
+              <h2 className="font-serif text-3xl md:text-4xl text-foreground">Featured Bales</h2>
+            </div>
+            <Link href="#products" className="hidden md:inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-foreground/70 hover:text-primary boty-transition">
+              View All <ArrowUpRight className="w-4 h-4" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            {featuredProducts.slice(0, 4).map((product, index) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                index={index}
+                isVisible={isVisible}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Products Section */}
+      <section id="products" className="pt-16 pb-20">
+        <div className="max-w-[1140px] mx-auto px-6">
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <div className="eyebrow font-mono text-[0.78rem] uppercase tracking-[0.18em] text-primary mb-3 flex items-center justify-center gap-2.5">
+              <span className="w-7 h-[2px] bg-primary inline-block" />
+              The Collection
+              <span className="w-7 h-[2px] bg-primary inline-block" />
+            </div>
+            <h2 className="font-serif text-3xl md:text-5xl text-foreground mb-4">All Stock</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Discover our premium collection of wigs, lace fronts, and hair extensions
+              Browse our full collection of premium thrift bales, sorted and graded for resale.
             </p>
           </div>
 
-          {/* Category Filter */}
-          <div className="flex justify-center mb-8 md:mb-12">
-            <div className="inline-flex bg-card rounded-full p-1 gap-1">
+          {/* Filters Bar */}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
+            {/* Category Dropdown (Mobile) */}
+            <div className="relative w-full md:hidden">
+              <button
+                type="button"
+                onClick={() => setIsFilterOpen(!isFilterOpen)}
+                className="w-full inline-flex items-center justify-between gap-2 bg-card px-4 py-3 rounded-xl boty-shadow text-sm font-medium text-foreground"
+              >
+                <span className="inline-flex items-center gap-2">
+                  <SlidersHorizontal className="w-4 h-4 text-primary" />
+                  {selectedCategory === "all" ? "All Categories" : selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}
+                </span>
+                <ChevronDown className={`w-4 h-4 boty-transition ${isFilterOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {isFilterOpen && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-card rounded-xl boty-shadow border border-border/50 overflow-hidden z-50">
+                  {categories.map((category) => (
+                    <button
+                      key={category}
+                      type="button"
+                      onClick={() => {
+                        setSelectedCategory(category)
+                        setIsFilterOpen(false)
+                      }}
+                      className={`w-full text-left px-4 py-3 text-sm boty-transition ${
+                        selectedCategory === category
+                          ? "bg-primary/10 text-primary font-medium"
+                          : "text-foreground/70 hover:bg-muted"
+                      }`}
+                    >
+                      {category === "all" ? "All Categories" : category.charAt(0).toUpperCase() + category.slice(1)}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Category Pills (Desktop) */}
+            <div className="hidden md:flex items-center gap-2 flex-wrap">
               {categories.map((category) => (
                 <button
                   key={category}
                   type="button"
                   onClick={() => setSelectedCategory(category)}
-                  className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
+                  className={`px-4 py-2 rounded-full text-xs font-mono uppercase tracking-wider boty-transition ${
                     selectedCategory === category
                       ? "bg-foreground text-background"
-                      : "text-muted-foreground hover:text-foreground"
+                      : "bg-card text-muted-foreground hover:text-foreground boty-shadow"
                   }`}
                 >
-                  {category === "all" ? "All" : category.charAt(0).toUpperCase() + category.slice(1)}
+                  {category === "all" ? "All" : category}
                 </button>
               ))}
+            </div>
+
+            {/* Sort Dropdown */}
+            <div ref={sortRef} className="relative w-full md:w-auto">
+              <button
+                type="button"
+                onClick={() => setIsSortOpen(!isSortOpen)}
+                className="w-full md:w-auto inline-flex items-center justify-between gap-2 bg-card px-4 py-3 rounded-xl boty-shadow text-sm font-medium text-foreground"
+              >
+                <span className="inline-flex items-center gap-2">
+                  <SlidersHorizontal className="w-4 h-4 text-primary" />
+                  {sortOptions.find(o => o.value === sortBy)?.label}
+                </span>
+                <ChevronDown className={`w-4 h-4 boty-transition ${isSortOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {isSortOpen && (
+                <div className="absolute top-full right-0 mt-2 bg-card rounded-xl boty-shadow border border-border/50 overflow-hidden z-50 min-w-[200px]">
+                  {sortOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => {
+                        setSortBy(option.value)
+                        setIsSortOpen(false)
+                      }}
+                      className={`w-full text-left px-4 py-3 text-sm boty-transition ${
+                        sortBy === option.value
+                          ? "bg-primary/10 text-primary font-medium"
+                          : "text-foreground/70 hover:bg-muted"
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
           {/* Results count */}
-          <div className="mb-6">
+          <div className="mb-6 flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
-              Showing {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'}
+              Showing <span className="font-bold text-foreground">{filteredProducts.length}</span> {filteredProducts.length === 1 ? 'bale' : 'bales'}
               {selectedCategory !== "all" && ` in ${selectedCategory}`}
             </p>
+            {selectedCategory !== "all" && (
+              <button
+                type="button"
+                onClick={() => setSelectedCategory("all")}
+                className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+              >
+                <X className="w-3 h-3" />
+                Clear filter
+              </button>
+            )}
           </div>
 
           {/* Product Grid */}
@@ -334,8 +521,7 @@ function ShopPageContent() {
           {/* Pagination */}
           {totalPages > 1 && (
             <div className="mt-12 md:mt-16">
-              {/* Top pagination */}
-              <div ref={topPaginationRef} className="flex justify-center mb-6">
+              <div className="flex justify-center mb-6">
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
@@ -374,7 +560,6 @@ function ShopPageContent() {
                 </div>
               </div>
 
-              {/* Bottom pagination - only on mobile */}
               <div className="flex justify-center md:hidden">
                 <div className="flex items-center gap-2">
                   <button
@@ -401,7 +586,43 @@ function ShopPageContent() {
             </div>
           )}
         </div>
-      </div>
+      </section>
+
+      {/* CTA Section — premium */}
+      <section className="relative border-t border-border bg-foreground text-background overflow-hidden">
+        {/* Ambient glow accents */}
+        <div className="absolute -top-24 -left-24 w-72 h-72 rounded-full bg-primary/20 blur-[100px] pointer-events-none" />
+        <div className="absolute -bottom-24 -right-24 w-72 h-72 rounded-full bg-accent/15 blur-[100px] pointer-events-none" />
+
+        <div className="relative max-w-[1140px] mx-auto px-6 py-20 md:py-28 text-center">
+          {/* Eyebrow */}
+          <div className="font-mono text-[0.72rem] uppercase tracking-[0.22em] text-accent mb-5 flex items-center justify-center gap-2.5">
+            <span className="w-6 h-[2px] bg-accent/60 inline-block" />
+            Custom Sourcing
+            <span className="w-6 h-[2px] bg-accent/60 inline-block" />
+          </div>
+
+          <h2 className="font-serif text-[clamp(2rem,5vw,3.4rem)] leading-tight mb-5 text-balance">
+            Can't find what you need?
+          </h2>
+          <p className="text-background/60 max-w-xl mx-auto mb-10 text-base md:text-lg leading-relaxed">
+            We offer custom sourcing services. Tell us what you're looking for and we'll find it in Guangzhou.
+          </p>
+
+          {/* Premium button */}
+          <a
+            href="https://wa.me/2349031560905?text=Hi%20good%20day%2C%20Mr%20Owen.%20I%20clicked%20Request%20Custom%20Sourcing%20on%20your%20website%20and%20I%20am%20interested%20in%20a%20custom%20thrift%20bale.%20Please%20send%20pricing%20and%20availability."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-3 bg-primary text-primary-foreground pl-7 pr-2 py-2 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 ease-out hover:bg-primary/90 hover:shadow-[0_8px_32px_rgba(196,90,59,0.35)] active:scale-[0.97]"
+          >
+            Request Custom Sourcing
+            <span className="w-9 h-9 rounded-full bg-background/15 backdrop-blur-sm flex items-center justify-center transition-transform duration-300 group-hover:translate-x-0.5">
+              <ArrowUpRight className="w-4 h-4" />
+            </span>
+          </a>
+        </div>
+      </section>
 
       <Footer />
     </main>

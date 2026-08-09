@@ -1,26 +1,235 @@
 "use client"
 
+import { useEffect, useRef, useState } from "react"
 import { usePathname } from "next/navigation"
 
 export function WhatsAppButton() {
   const pathname = usePathname()
+  const [isFooterVisible, setIsFooterVisible] = useState(false)
+  const [position, setPosition] = useState<{ x: number; y: number } | null>(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const dragStateRef = useRef<{ pointerX: number; pointerY: number; startX: number; startY: number } | null>(null)
+  const isDraggingRef = useRef(false)
+  const hasDraggedRef = useRef(false)
+  const buttonRef = useRef<HTMLAnchorElement>(null)
   const phoneNumber = "2349031560905"
   const message = "Hello! I'm interested in your products."
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
 
-  if (pathname.startsWith("/admin") || pathname.startsWith("/invoice")) return null
+  useEffect(() => {
+    const handleScroll = () => {
+      const footer = document.querySelector("footer")
+      if (!footer) return
+      const rect = footer.getBoundingClientRect()
+      const viewportHeight = window.innerHeight
+      // Footer is considered visible when its top edge enters the viewport
+      setIsFooterVisible(rect.top < viewportHeight && rect.bottom > 0)
+    }
+
+    const handleResize = () => {
+      handleScroll()
+      const pos = position
+      const button = buttonRef.current
+      if (pos && button) {
+        const maxX = window.innerWidth - button.offsetWidth
+        const maxY = window.innerHeight - button.offsetHeight
+        const newPos = {
+          x: Math.min(pos.x, Math.max(maxX, 0)),
+          y: Math.min(pos.y, Math.max(maxY, 0)),
+        }
+        setPosition(newPos)
+      }
+    }
+
+    handleScroll()
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    window.addEventListener("resize", handleResize)
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [])
+
+  if (pathname.startsWith("/admin") || pathname.startsWith("/invoice")) {
+    return null
+  }
+
+  const floatingBadgeImage =
+    "https://res.cloudinary.com/djdbcoyot/image/upload/v1786282235/u1fryuoyq3yapptrkr82.png"
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    const btn = buttonRef.current
+    if (!btn) return
+
+    const rect = btn.getBoundingClientRect()
+    const currentX = position?.x ?? rect.left
+    const currentY = position?.y ?? rect.top
+
+    dragStateRef.current = {
+      pointerX: e.clientX,
+      pointerY: e.clientY,
+      startX: currentX,
+      startY: currentY,
+    }
+    hasDraggedRef.current = false
+    btn.style.touchAction = "none"
+    btn.setPointerCapture(e.pointerId)
+  }
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    const button = buttonRef.current
+    if (!button || !dragStateRef.current) return
+
+    const dx = e.clientX - dragStateRef.current.pointerX
+    const dy = e.clientY - dragStateRef.current.pointerY
+
+    // Only start dragging after threshold is met
+    if (!isDraggingRef.current) {
+      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+        hasDraggedRef.current = true
+        isDraggingRef.current = true
+        setIsDragging(true)
+      } else {
+        return
+      }
+    }
+
+    const buttonWidth = button.offsetWidth
+    const buttonHeight = button.offsetHeight
+    const maxX = Math.max(window.innerWidth - buttonWidth, 0)
+    const maxY = Math.max(window.innerHeight - buttonHeight, 0)
+    const newX = Math.min(Math.max(dragStateRef.current.startX + dx, 0), maxX)
+    const newY = Math.min(Math.max(dragStateRef.current.startY + dy, 0), maxY)
+
+    setPosition({ x: newX, y: newY })
+  }
+
+  const handlePointerUp = (e: React.PointerEvent) => {
+    isDraggingRef.current = false
+    setIsDragging(false)
+    dragStateRef.current = null
+    if (buttonRef.current) {
+      buttonRef.current.style.touchAction = ""
+    }
+  }
+
+  const handleClick = (e: React.MouseEvent) => {
+    if (hasDraggedRef.current) {
+      e.preventDefault()
+    }
+  }
+
+  const buttonStyle: React.CSSProperties = {}
+  if (position) {
+    let top = position.y
+    if (isFooterVisible) {
+      top = Math.max(position.y - 140, 0)
+    }
+    buttonStyle.left = position.x
+    buttonStyle.top = top
+  }
+  if (isDragging) {
+    buttonStyle.transition = "none"
+    buttonStyle.touchAction = "none"
+  }
 
   return (
     <a
+      ref={buttonRef}
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full bg-[#25D366] flex items-center justify-center boty-shadow hover:scale-110 boty-transition animate-breathe"
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}
+      onClick={handleClick}
+      className={`fixed z-50 block select-none touch-none ${
+        position ? "" : isFooterVisible ? "bottom-40 right-2" : "bottom-5 right-2"
+      } ${isDragging ? "cursor-grabbing" : "cursor-grab transition-all duration-300"}`}
+      style={buttonStyle}
       aria-label="Chat on WhatsApp"
     >
-      <svg viewBox="0 0 24 24" className="w-9 h-9" fill="white">
-        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-      </svg>
+      <div
+        className="relative flex flex-col items-center"
+        style={{ animation: isDragging ? "none" : "floaty 3.2s ease-in-out infinite" }}
+      >
+        <svg viewBox="0 0 200 60" className="-mb-3 w-[120px] h-[36px] overflow-visible sm:w-[150px] sm:h-[45px]">
+          <defs>
+            <path id="curvePath" d="M 20,50 Q 100,-10 180,50" fill="none" />
+          </defs>
+          <text className="fill-foreground font-mono text-[0.72rem] font-bold uppercase tracking-[0.14em]">
+            <textPath href="#curvePath" startOffset="50%" textAnchor="middle">
+              Speak with Owen
+            </textPath>
+          </text>
+        </svg>
+        <div className="relative flex items-center justify-center">
+          <div
+            className="absolute -inset-4 rounded-full"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(255,170,80,0.62) 0%, rgba(255,126,54,0.34) 25%, rgba(255,126,54,0) 72%)",
+              filter: "blur(12px)",
+              opacity: 0.9,
+            }}
+          />
+          <div
+            className="absolute -left-3 top-3 h-10 w-1 rounded-full"
+            style={{
+              background: "linear-gradient(to bottom, rgba(255,196,99,0.9), rgba(255,128,42,0))",
+              transform: "rotate(18deg)",
+              filter: "blur(2px)",
+            }}
+          />
+          <div
+            className="absolute -right-4 top-1 h-11 w-1 rounded-full"
+            style={{
+              background: "linear-gradient(to bottom, rgba(255,196,99,0.9), rgba(255,128,42,0))",
+              transform: "rotate(-16deg)",
+              filter: "blur(2px)",
+            }}
+          />
+          <div
+            className="absolute left-2 top-1/2 h-7 w-1 rounded-full"
+            style={{
+              background: "linear-gradient(to bottom, rgba(255,210,120,0.8), rgba(255,140,54,0))",
+              transform: "rotate(-24deg)",
+              filter: "blur(2px)",
+            }}
+          />
+          <div
+            className="absolute right-2 bottom-2 h-7 w-1 rounded-full"
+            style={{
+              background: "linear-gradient(to bottom, rgba(255,210,120,0.8), rgba(255,140,54,0))",
+              transform: "rotate(23deg)",
+              filter: "blur(2px)",
+            }}
+          />
+
+          <div
+            className="relative h-14 w-14 overflow-hidden rounded-full border border-white/20 shadow-[0_14px_28px_rgba(0,0,0,0.24)] ring-1 ring-orange-200/40 sm:h-20 sm:w-20"
+            style={{
+              backgroundImage: `url('${floatingBadgeImage}')`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
+            <div className="absolute inset-0 bg-black/5" />
+          </div>
+        </div>
+      </div>
+
+      <style jsx>{`
+        @keyframes floaty {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-6px);
+          }
+        }
+      `}</style>
     </a>
   )
 }

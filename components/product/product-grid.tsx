@@ -3,21 +3,10 @@
 import { useState, useEffect, useRef, useCallback } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { ShoppingBag } from "lucide-react"
-import { useQueryClient } from "@tanstack/react-query"
+import { ShoppingBag, ArrowUpRight } from "lucide-react"
 import { useCart } from "@/components/providers/cart-context"
-import { useLatestProducts } from "@/hooks/use-products"
-import { supabase } from "@/lib/supabase"
-
-interface FeaturedProduct {
-  id: string
-  name: string
-  price: number
-  image: string
-  badge: string | null
-  category: string
-  description: string
-}
+import { useFlyToCart } from "@/hooks/use-fly-to-cart"
+import { hardcodedProducts, type HardcodedProduct } from "@/lib/hardcoded-products"
 
 const formatUsdPrice = (value: number | string) =>
   new Intl.NumberFormat("en-US", {
@@ -28,33 +17,16 @@ const formatUsdPrice = (value: number | string) =>
   }).format(Number(value) || 0)
 
 export function ProductGrid() {
-  const { data: products = [], isLoading: loading } = useLatestProducts(6)
-  const queryClient = useQueryClient()
+  const products = hardcodedProducts.slice(0, 6)
 
   const [isVisible, setIsVisible] = useState(true)
   const [headerVisible, setHeaderVisible] = useState(true)
   const gridRef = useRef<HTMLDivElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
   const { addItem } = useCart()
+  const flyToCart = useFlyToCart()
   const [imageLoaded, setImageLoaded] = useState<Record<string, boolean>>({})
-
-  // Real-time subscription: invalidate cache on any product change
-  useEffect(() => {
-    const channel = supabase
-      .channel("home-products-changes")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "products" },
-        () => {
-          queryClient.invalidateQueries({ queryKey: ["products"] })
-        },
-      )
-      .subscribe()
-
-    return () => {
-      supabase.removeChannel(channel)
-    }
-  }, [queryClient])
+  const imageRefs = useRef<Record<string, HTMLDivElement | null>>({})
 
   // Preload all product images on mount
   useEffect(() => {
@@ -102,9 +74,11 @@ export function ProductGrid() {
   }, [])
 
   const handleAddToCart = useCallback(
-    (e: React.MouseEvent, product: FeaturedProduct) => {
+    (e: React.MouseEvent, product: HardcodedProduct) => {
       e.preventDefault()
       e.stopPropagation()
+      // Trigger fly-to-cart animation from the product image
+      flyToCart(imageRefs.current[product.id] || null, product.image)
       addItem({
         id: product.id,
         name: product.name,
@@ -112,141 +86,122 @@ export function ProductGrid() {
         image: product.image,
       })
     },
-    [addItem]
+    [addItem, flyToCart]
   )
 
-  if (loading) {
-    return (
-      <section className="py-24 bg-card">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <div className="h-8 w-48 bg-muted animate-pulse rounded mx-auto mb-4"></div>
-            <div className="h-12 w-96 bg-muted animate-pulse rounded mx-auto mb-4"></div>
-            <div className="h-6 w-64 bg-muted animate-pulse rounded mx-auto"></div>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="bg-background rounded-3xl overflow-hidden">
-                <div className="aspect-square bg-muted animate-pulse"></div>
-                <div className="p-3 md:p-5">
-                  <div className="h-4 bg-muted animate-pulse rounded mb-2"></div>
-                  <div className="h-3 bg-muted animate-pulse rounded mb-4"></div>
-                  <div className="h-8 bg-muted animate-pulse rounded-full"></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    )
-  }
-
-  const featuredProducts = products as FeaturedProduct[]
-
   return (
-    <section className="py-24 bg-card">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+    <section className="py-16 md:py-20 border-b border-border">
+      <div className="max-w-[1140px] mx-auto px-6">
         {/* Header */}
-        <div ref={headerRef} className="text-center mb-16">
-          <span className={`text-sm tracking-[0.3em] uppercase text-primary mb-4 block ${headerVisible ? 'animate-blur-in opacity-0' : 'opacity-0'}`} style={headerVisible ? { animationDelay: '0.2s', animationFillMode: 'forwards' } : {}}>
-            Featured Collection
-          </span>
-          <h2 className={`font-serif leading-tight text-foreground mb-4 text-balance text-4xl md:text-7xl ${headerVisible ? 'animate-blur-in opacity-0' : 'opacity-0'}`} style={headerVisible ? { animationDelay: '0.4s', animationFillMode: 'forwards' } : {}}>
-            Featured products
-          </h2>
-          <p className={`text-lg text-muted-foreground max-w-md mx-auto ${headerVisible ? 'animate-blur-in opacity-0' : 'opacity-0'}`} style={headerVisible ? { animationDelay: '0.6s', animationFillMode: 'forwards' } : {}}>
-            Our newest arrivals, crafted for beauty and confidence
-          </p>
+        <div ref={headerRef} className="flex justify-between items-end flex-wrap gap-4 mb-9 md:mb-12">
+          <div>
+            <span className={`font-mono text-[0.78rem] uppercase tracking-[0.18em] text-primary mb-3 block ${headerVisible ? 'animate-blur-in opacity-0' : 'opacity-0'}`} style={headerVisible ? { animationDelay: '0.2s', animationFillMode: 'forwards' } : {}}>
+              Catalog
+            </span>
+            <h2 className={`font-serif leading-tight text-foreground text-[clamp(1.6rem,4vw,2.4rem)] ${headerVisible ? 'animate-blur-in opacity-0' : 'opacity-0'}`} style={headerVisible ? { animationDelay: '0.4s', animationFillMode: 'forwards' } : {}}>
+              Available Categories
+            </h2>
+            <p className={`text-[0.95rem] text-foreground/60 max-w-[420px] mt-2 ${headerVisible ? 'animate-blur-in opacity-0' : 'opacity-0'}`} style={headerVisible ? { animationDelay: '0.6s', animationFillMode: 'forwards' } : {}}>
+              Browse our current thrift stock by category. All items inspected and graded in Guangzhou.
+            </p>
+          </div>
+          <Link href="/shop" className="hidden sm:inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-foreground/70 hover:text-primary border border-border rounded-full px-5 py-2.5 boty-transition hover:border-primary/40 hover:bg-card">
+            Full Catalog <ArrowUpRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
 
-        {/* Product Grid */}
+        {/* Product Grid — always 2 cols on mobile, scales up per breakpoint */}
         <div
           ref={gridRef}
-          className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6"
+          className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-5 lg:gap-6"
         >
-          {featuredProducts.map((product, index) => (
-            <Link
+          {products.map((product, index) => (
+            <div
               key={product.id}
-              href={`/product/${product.id}`}
-              className={`group transition-all duration-500 ease-out ${
-                isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+              className={`group block w-full transition-all duration-500 ease-out ${
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
               style={{ transitionDelay: `${index * 80}ms` }}
             >
-              <div className="bg-background rounded-3xl overflow-hidden boty-shadow boty-transition group-hover:scale-[1.02]">
-                {/* Image */}
-                <div className="relative aspect-square bg-muted overflow-hidden">
-                  {/* Skeleton */}
+              <div className="relative bg-card rounded-2xl overflow-hidden border border-border/60 flex flex-col h-full min-w-0 transition-all duration-300 ease-out group-hover:-translate-y-1.5 group-hover:border-border group-hover:shadow-[0_8px_16px_-6px_rgba(0,0,0,0.06),0_20px_40px_-12px_rgba(0,0,0,0.12)]">
+                <Link href={`/product/${product.id}`} className="block">
+                  {/* Image — balanced medium height */}
                   <div
-                    className={`absolute inset-0 bg-gradient-to-br from-muted via-muted/50 to-muted animate-pulse transition-opacity duration-500 ${
-                      imageLoaded[product.id] ? 'opacity-0' : 'opacity-100'
-                    }`}
-                  />
-
-                  <Image
-                    src={product.image || "/placeholder.svg"}
-                    alt={product.name}
-                    fill
-                    sizes="(max-width: 768px) 50vw, 33vw"
-                    priority={index < 3}
-                    className={`object-cover boty-transition group-hover:scale-105 transition-opacity duration-500 ${
-                      imageLoaded[product.id] ? 'opacity-100' : 'opacity-0'
-                    }`}
-                    onLoad={() => setImageLoaded(prev => ({ ...prev, [product.id]: true }))}
-                  />
-                  {/* Badge */}
-                  {product.badge && (
-                    <span
-                      className={`absolute top-4 left-4 px-3 py-1 rounded-full text-xs tracking-wide backdrop-blur-sm bg-white/70 ${
-                        product.badge === "Sale"
-                          ? "text-red-600"
-                          : product.badge === "New"
-                          ? "text-primary"
-                          : "text-black"
+                    ref={(el) => { imageRefs.current[product.id] = el }}
+                    className="relative aspect-[4/3.6] sm:aspect-[4/4] bg-muted overflow-hidden"
+                  >
+                    {/* Skeleton */}
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-br from-muted via-muted/50 to-muted animate-pulse transition-opacity duration-500 ${
+                        imageLoaded[product.id] ? 'opacity-0' : 'opacity-100'
                       }`}
-                    >
-                      {product.badge}
-                    </span>
-                  )}
-                  {/* Quick add button */}
-                  <button
-                    type="button"
-                    className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-background/90 backdrop-blur-sm flex items-center justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 boty-transition boty-shadow"
-                    onClick={(e) => handleAddToCart(e, product)}
-                    aria-label="Add to cart"
-                  >
-                    <ShoppingBag className="w-4 h-4 text-foreground" />
-                  </button>
-                </div>
+                    />
 
-                {/* Info */}
-                <div className="p-3 md:p-5 pb-4">
-                  <h3 className="font-serif text-sm md:text-lg text-foreground mb-0.5 md:mb-1">{product.name}</h3>
-                  <p className="text-xs md:text-sm text-muted-foreground mb-2 md:mb-3 line-clamp-2">{product.description ? product.description.split(' ').slice(0, 7).join(' ') + (product.description.split(' ').length > 7 ? '...' : '') : 'Premium quality hair product'}</p>
-                  <div className="flex items-center gap-2 mb-2 md:mb-4">
-                    <span className="text-xs md:text-base font-medium text-foreground">{formatUsdPrice(product.price)}</span>
+                    <Image
+                      src={product.image || "/placeholder.svg"}
+                      alt={product.name}
+                      fill
+                      sizes="(max-width: 768px) 50vw, 33vw"
+                      priority={index < 3}
+                      className={`object-cover transition-[transform,opacity] duration-500 ease-out group-hover:scale-[1.06] ${
+                        imageLoaded[product.id] ? 'opacity-100' : 'opacity-0'
+                      }`}
+                      onLoad={() => setImageLoaded(prev => ({ ...prev, [product.id]: true }))}
+                    />
+                    {/* Stamp Badge */}
+                    {product.badge && (
+                      <span
+                        className={`ed-stamp ${
+                          product.badge === "Sale"
+                            ? "ed-stamp-mustard"
+                            : product.badge === "New"
+                            ? "ed-stamp-olive"
+                            : ""
+                        }`}
+                      >
+                        {product.badge}
+                      </span>
+                    )}
                   </div>
-                  <button
-                    type="button"
-                    onClick={(e) => handleAddToCart(e, product)}
-                    className="w-full inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-3 py-1.5 md:px-4 md:py-2.5 rounded-full text-[10px] md:text-xs tracking-wide boty-transition hover:bg-primary/90 boty-shadow"
-                  >
-                    <ShoppingBag className="w-3 h-3 md:w-3.5 md:h-3.5" />
-                    Add to Cart
-                  </button>
+
+                  {/* Info — compact mobile-style */}
+                  <div className="p-2.5 sm:p-4 flex flex-col gap-1 sm:gap-1.5 flex-1 min-w-0">
+                    <h3 className="font-serif text-[0.72rem] sm:text-[0.95rem] md:text-[1.05rem] leading-snug line-clamp-1 sm:line-clamp-2 text-foreground">{product.name}</h3>
+                    <p className="text-[0.58rem] sm:text-[0.72rem] md:text-[0.78rem] text-muted-foreground leading-relaxed line-clamp-1 sm:line-clamp-2">Graded thrift stock · Class A & B · Sourced from Guangzhou</p>
+                    <div className="text-[0.8rem] sm:text-[1rem] md:text-[1.1rem] font-semibold tracking-tight text-foreground">
+                      {formatUsdPrice(product.price)}
+                    </div>
+                  </div>
+                </Link>
+
+                {/* Buttons — stacked on mobile (Add above View), side-by-side on sm+ */}
+                <div className="px-2.5 pb-2.5 sm:px-4 sm:pb-4">
+                  <div className="flex flex-col sm:flex-row gap-1.5 sm:gap-2">
+                    <button
+                      type="button"
+                      onClick={(e) => handleAddToCart(e, product)}
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-full bg-primary text-primary-foreground text-[0.65rem] sm:text-[0.72rem] md:text-[0.78rem] font-semibold tracking-wide px-2 sm:px-3 py-2 sm:py-2.5 transition-all duration-300 ease-out hover:bg-primary/90 active:scale-[0.97]"
+                    >
+                      <ShoppingBag className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                      Add to Cart
+                    </button>
+                    <Link
+                      href={`/product/${product.id}`}
+                      className="flex-1 inline-flex items-center justify-center rounded-full border border-border bg-card text-foreground text-[0.65rem] sm:text-[0.72rem] md:text-[0.78rem] font-semibold tracking-wide px-2 sm:px-3 py-2 sm:py-2.5 transition-all duration-300 ease-out hover:border-foreground active:scale-[0.97]"
+                    >
+                      View
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
 
-        {/* View All Button */}
-        <div className="text-center mt-12">
-          <Link
-            href="/shop"
-            className="inline-flex items-center justify-center gap-2 bg-transparent border border-foreground/20 text-foreground px-8 py-4 rounded-full text-sm tracking-wide boty-transition hover:bg-foreground/5"
-          >
-            View All Products
+        {/* Mobile "Full Catalog" link */}
+        <div className="mt-8 sm:hidden flex justify-center">
+          <Link href="/shop" className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-foreground/70 hover:text-primary border border-border rounded-full px-5 py-3 boty-transition">
+            Full Catalog <ArrowUpRight className="w-3.5 h-3.5" />
           </Link>
         </div>
       </div>

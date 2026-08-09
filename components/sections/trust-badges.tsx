@@ -6,23 +6,23 @@ import { Award, Scissors, Sparkles, Heart } from "lucide-react"
 const badges = [
   {
     icon: Award,
-    title: "Premium Quality",
-    description: "100% virgin human hair"
+    label: "Sourcing",
+    value: "Direct from China warehouses"
   },
   {
     icon: Scissors,
-    title: "Expert Crafted",
-    description: "Hand-tied bleached knots"
+    label: "Inspection",
+    value: "Every item checked & graded"
   },
   {
     icon: Sparkles,
-    title: "Tangle-Free",
-    description: "Natural cuticle alignment"
+    label: "Orders",
+    value: "Bales only, 2 bale minimum"
   },
   {
     icon: Heart,
-    title: "Ethically Sourced",
-    description: "Fair trade certified"
+    label: "Support",
+    value: "WhatsApp + Telegram"
   }
 ]
 
@@ -52,25 +52,41 @@ export function TrustBadges() {
   }, [])
 
   return (
-    <section className="py-20 bg-background">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div 
+    <section className="border-b border-border bg-secondary">
+      <div className="max-w-[1140px] mx-auto px-6">
+        <div
           ref={sectionRef}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6"
+          className="grid grid-cols-2 lg:grid-cols-4"
         >
           {badges.map((badge, index) => (
             <div
-              key={badge.title}
-              className={`bg-background p-3 md:p-6 lg:p-8 text-center rounded-xl border border-stone-200 transition-all duration-700 ease-out border-none ${
-                isVisible 
-                  ? 'opacity-100 translate-y-0' 
+              key={badge.label}
+              className={`p-5 md:p-6 border-r border-border last:border-r-0 ${
+                index >= 2 ? "border-t lg:border-t-0" : ""
+              } ${index % 2 === 1 ? "border-r-0 lg:border-r" : ""} ${
+                isVisible
+                  ? 'opacity-100 translate-y-0'
                   : 'opacity-0 translate-y-8'
               }`}
               style={{ transitionDelay: `${index * 150}ms` }}
             >
-              <badge.icon className="text-primary mb-2 md:mb-4 mx-auto size-8 md:size-12" strokeWidth={1} />
-              <h3 className="font-serif text-foreground mb-1 md:mb-2 text-sm md:text-2xl">{badge.title}</h3>
-              <p className="text-[10px] md:text-sm text-muted-foreground">{badge.description}</p>
+              <badge.icon className="text-primary mb-2 size-5 md:size-6" strokeWidth={1.5} />
+              <div className="font-mono text-[0.7rem] uppercase tracking-[0.1em] text-primary mb-1.5">
+                {badge.label}
+              </div>
+              <div
+                className={
+                  badge.value === "Direct from China warehouses"
+                    ? "font-bold text-[0.95rem] md:text-[1.05rem] leading-snug"
+                    : badge.value === "Every item checked & graded" ||
+                        badge.value === "Bales only, 2 bale minimum" ||
+                        badge.value === "WhatsApp + Telegram"
+                      ? "font-bold text-[0.95rem] md:text-[1.05rem] leading-snug"
+                      : "font-serif text-[0.95rem] md:text-[1.05rem] leading-snug"
+                }
+              >
+                {badge.value}
+              </div>
             </div>
           ))}
         </div>

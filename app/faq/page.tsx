@@ -1,98 +1,108 @@
+"use client"
+
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
-import { ChevronDown, Search } from "lucide-react"
+import { ChevronDown, ChevronLeft, ShieldCheck, Package, Truck, Sparkles } from "lucide-react"
 
 const faqCategories = [
   {
-    title: "Orders & Shipping",
+    title: "Sourcing & Orders",
     questions: [
+      {
+        q: "What is the minimum order quantity?",
+        a: "Minimum order is 2 bales. Small orders are 80kg and large orders are baled between 40kg and 80kg each. This ensures quality control and proper grading of every item."
+      },
+      {
+        q: "How do I place an order?",
+        a: "Simply browse our shop and select the bales you want. Add them to your cart and checkout. You can also order directly via WhatsApp for faster service and personalized assistance."
+      },
+      {
+        q: "What payment methods do you accept?",
+        a: "We accept bank transfers, Western Union, and other international payment methods. Payment details are provided after order confirmation. We require 50% deposit to begin sourcing."
+      },
+      {
+        q: "How long does the sourcing process take?",
+        a: "Standard sourcing takes 5-7 business days. Rush orders can be completed in 2-3 days for an additional fee. We keep you updated throughout the process."
+      }
+    ]
+  },
+  {
+    title: "Shipping & Delivery",
+    questions: [
+      {
+        q: "Where do you ship to?",
+        a: "We ship worldwide. Shipping costs and delivery times vary by destination. Contact us for specific quotes to your country. We have strong logistics networks to Africa, Europe, and beyond."
+      },
       {
         q: "How long does shipping take?",
-        a: "Orders are processed within 1-2 business days. Standard shipping takes 3-7 business days depending on your location. Express shipping is available at checkout for faster delivery."
+        a: "Shipping typically takes 15-30 days depending on your location. Air freight is available for urgent orders at an additional cost. We provide tracking information for all shipments."
       },
       {
-        q: "Do you ship internationally?",
-        a: "Yes, we ship to select countries across Africa and internationally. Shipping rates and delivery times vary by location. You can see exact shipping costs at checkout before completing your order."
+        q: "Do you handle customs clearance?",
+        a: "Yes, we assist with customs documentation and clearance procedures. We provide all necessary paperwork to ensure smooth clearance at your port of entry."
       },
       {
-        q: "What is your shipping cost?",
-        a: "We offer free standard shipping on all orders over $100. For orders under $100, a flat shipping fee applies. Express shipping options are available at an additional cost."
+        q: "What are the shipping costs?",
+        a: "Shipping costs depend on weight, destination, and shipping method. We provide detailed quotes before you confirm your order. No hidden fees."
       }
     ]
   },
   {
-    title: "Returns & Exchanges",
-   questions: [
-      {
-        q: "What is your return policy?",
-        a: "We accept returns within 14 days of delivery. Products must be unused, unwashed, and in their original packaging with all tags attached. Once we receive and inspect the return, we'll process your refund within 5-7 business days."
-      },
-      {
-        q: "Can I exchange my wig for a different size?",
-        a: "Yes, exchanges are welcome within 14 days of delivery. Please contact our customer service team to initiate an exchange. You'll be responsible for return shipping, and we'll ship the new size at no additional cost."
-      },
-      {
-        q: "What if my product arrives damaged?",
-        a: "If your order arrives damaged or defective, please contact us within 48 hours of delivery with photos of the damage. We'll arrange a replacement or full refund, including return shipping costs."
-      },
-      {
-        q: "How long do refunds take?",
-        a: "Refunds are processed within 5-7 business days after we receive and inspect your return. The refund will be issued to your original payment method. Depending on your bank, it may take an additional 2-5 business days to appear in your account."
-      }
-    ]
-  },
-  {
-    title: "Product Care",
+    title: "Quality & Inspection",
     questions: [
       {
-        q: "How do I care for my wig?",
-        a: "Wash your wig every 6-8 wears using sulfate-free shampoo and conditioner. Always use cool water and avoid rubbing or twisting the hair. Apply a leave-in conditioner and allow the wig to air dry on a wig stand. Store on a wig stand or in a silk bag when not in use."
+        q: "How do you ensure quality?",
+        a: "Every bale undergoes rigorous inspection before shipping. We check for damage, verify grades, and ensure proper sorting. Photos and videos are provided before dispatch."
       },
       {
-        q: "Can I style my wig with heat tools?",
-        a: "Yes, our wigs are made with 100% virgin human hair that can be heat styled up to 400°F (200°C). Always use a heat protectant spray before styling. For curly textures, we recommend limiting heat use to preserve the curl pattern."
+        q: "What if I receive damaged items?",
+        a: "We take full responsibility for quality. If you receive damaged or incorrectly graded items, we provide replacements or refunds. Contact us within 48 hours of delivery with photos."
       },
       {
-        q: "How long will my wig last?",
-        a: "With proper care, our wigs can last 6-12 months or longer. The lifespan depends on how often you wear it, how well you maintain it, and the products you use. Following our care guide will help maximize longevity."
+        q: "Can I request specific items?",
+        a: "Yes! We offer custom sourcing services. Tell us what you need and we'll find it. Additional fees may apply for specialized sourcing requests."
       },
       {
-        q: "Can I color or dye my wig?",
-        a: "Yes, since our wigs are made with 100% virgin human hair, they can be dyed or colored. We recommend having a professional colorist handle the process to avoid damage. Always perform a strand test first."
+        q: "What quality grades do you offer?",
+        a: "We grade thrift stock as Premium (excellent condition), Grade A (very good), and Grade B (good). Each grade has clear criteria so you know exactly what to expect."
       }
     ]
   },
   {
-    title: "Sizing & Fit",
+    title: "Services & Pricing",
     questions: [
       {
-        q: "How do I choose the right size?",
-        a: "Measure your head circumference just above your ears and around the nape of your neck. Our wigs come in standard sizes with adjustable straps. If you're between sizes or have a larger head circumference, please contact us for custom sizing options."
+        q: "What services do you offer?",
+        a: "We provide sourcing, quality inspection, purchase, consolidation, and shipping. Our full-day service (¥500) includes sourcing and inspection. Half-day service (¥250) is also available."
       },
       {
-        q: "Are the wigs adjustable?",
-        a: "Yes, all our wigs feature adjustable straps and combs inside the cap. This allows you to customize the fit for maximum comfort and security. Most wigs fit head circumferences of 21-23 inches."
+        q: "What's included in the service charge?",
+        a: "Our service charge covers sourcing from suppliers, quality inspection, photography, consolidation, and documentation. Transport within Guangzhou is included. Outside GZ transport is additional."
       },
       {
-        q: "What if the wig doesn't fit?",
-        a: "If your wig doesn't fit properly, you can exchange it within 14 days for a different size. We also offer custom sizing for an additional fee. Contact our team and we'll help you find the perfect fit."
+        q: "Do you offer bulk discounts?",
+        a: "Yes! We offer competitive pricing for bulk orders. The more you order, the better the rate. Contact us for custom quotes on large volume orders."
+      },
+      {
+        q: "What are your payment terms?",
+        a: "50% deposit to begin sourcing, 50% before shipping. For established clients, we offer credit terms. Payment plans are available for large orders."
       }
     ]
   },
   {
-    title: "Hair Quality",
+    title: "Support & Communication",
     questions: [
       {
-        q: "What type of hair do you use?",
-        a: "We use 100% virgin human hair sourced from donors. Our hair is never chemically processed, maintains its natural cuticle alignment, and can be styled, colored, and treated just like your natural hair."
+        q: "How can I contact you?",
+        a: "We're available via WhatsApp and Telegram for fast communication. Response time is typically under 1 hour during business hours (Mon-Sat, 9am-6pm China time)."
       },
       {
-        q: "Is your hair ethically sourced?",
-        a: "Yes, we are committed to ethical sourcing practices. Our hair is collected through fair trade partnerships with donors who are compensated fairly. We believe in transparency and respect throughout our supply chain."
+        q: "Do you provide updates during the process?",
+        a: "Absolutely! We send regular updates including photos and videos of your items. You'll receive notifications at each stage: sourcing, inspection, packing, and shipping."
       },
       {
-        q: "What is the difference between your lace types?",
-        a: "HD (High Definition) lace is ultra-thin and transparent, making it virtually invisible on any skin tone. Swiss lace is slightly thicker but still very natural-looking. Both are high quality — HD lace offers the most undetectable finish."
+        q: "Can I visit your facility in China?",
+        a: "Yes! We welcome clients to visit our Guangzhou facility. Please contact us in advance to schedule a visit. We can also arrange accommodation and transport during your stay."
       }
     ]
   }
@@ -100,21 +110,32 @@ const faqCategories = [
 
 export default function FAQPage() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen overflow-x-hidden">
       <Header />
 
-      <div className="pt-28 pb-20">
+      <div className="pt-24 pb-20">
         <div className="max-w-4xl mx-auto px-6 lg:px-8">
+          {/* Back button */}
+          <button
+            type="button"
+            onClick={() => window.history.back()}
+            className="mb-10 inline-flex items-center gap-1.5 font-mono text-[0.78rem] uppercase tracking-[0.08em] text-foreground/70 hover:text-foreground boty-transition cursor-pointer"
+          >
+            <ChevronLeft className="w-4 h-4" />
+            Back
+          </button>
+
           {/* Header */}
-          <div className="text-center mb-16">
-            <span className="text-sm tracking-[0.3em] uppercase text-primary mb-4 block">
+          <div className="max-w-2xl">
+            <div className="eyebrow font-mono text-[0.78rem] uppercase tracking-[0.18em] text-primary mb-4 flex items-center gap-2.5">
+              <span className="w-7 h-[2px] bg-primary inline-block" />
               Got Questions?
-            </span>
-            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-foreground mb-4 text-balance">
-              Frequently Asked Questions
+            </div>
+            <h1 className="font-serif text-[clamp(2.4rem,6vw,4.2rem)] leading-[1.04] tracking-[-0.01em] mb-5">
+              Frequently Asked <em className="not-italic text-primary">Questions</em>
             </h1>
-            <p className="text-lg text-muted-foreground max-w-lg mx-auto">
-              Everything you need to know about our products, shipping, returns, and more
+            <p className="text-[1.05rem] text-foreground/70 max-w-[520px]">
+              Everything you need to know about sourcing thrift bales, quality inspection, shipping, and our services.
             </p>
           </div>
 
@@ -153,13 +174,15 @@ export default function FAQPage() {
               Still have questions?
             </h2>
             <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-              Can't find the answer you're looking for? Please reach out to our friendly team.
+              Can't find the answer you're looking for? Our team is ready to help you with any questions about sourcing, quality, or shipping.
             </p>
             <a
-              href="mailto:support@ammiehair.com"
+              href="https://wa.me/2349031560905?text=Hello!%20I%20have%20a%20question%20about%20your%20sourcing%20services."
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-full text-sm tracking-wide boty-transition hover:bg-primary/90 boty-shadow"
             >
-              Contact Support
+              Chat on WhatsApp
             </a>
           </div>
         </div>
