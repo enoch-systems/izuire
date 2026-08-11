@@ -111,14 +111,14 @@ const faqCategories = [
 
 export default function FAQPage() {
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0 })
+    window.scrollTo(0, 0)
   }, [])
 
   return (
     <main className="min-h-screen overflow-x-hidden">
       <Header />
 
-      <div className="pt-4 pb-20">
+      <div className="pt-6 pb-20">
         <div className="max-w-4xl mx-auto px-6 lg:px-8">
           {/* Back button */}
           <button

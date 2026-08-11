@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
@@ -8,11 +8,6 @@ import { Phone, Mail, MapPin, Clock, Send, CheckCircle2, MessageCircle, ChevronL
 
 export default function ContactPage() {
   const router = useRouter()
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0 })
-  }, [])
-
   const [formState, setFormState] = useState({
     name: "",
     email: "",
@@ -20,6 +15,36 @@ export default function ContactPage() {
     message: "",
   })
   const [submitted, setSubmitted] = useState(false)
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'instant'
+    })
+  }, [])
+
+  const whyChooseRef = useRef<HTMLDivElement>(null)
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true)
+          }
+        })
+      },
+      { threshold: 0.2 }
+    )
+
+    if (whyChooseRef.current) {
+      observer.observe(whyChooseRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -144,26 +169,25 @@ export default function ContactPage() {
                   ) : (
                     <div>
                       <div className="font-sans font-semibold text-base text-foreground">{card.value}</div>
-                      {card.mapsUrl && (
-                        <a
-                          href={card.mapsUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="mt-2 inline-flex items-center gap-1.5 font-mono text-[0.6rem] uppercase tracking-[0.1em] text-primary border-[1.5px] border-primary rounded-[3px] px-1.5 py-0.5 rotate-3 whitespace-nowrap hover:bg-primary hover:text-primary-foreground transition-colors"
-                        >
-                          View on Maps
-                        </a>
-                      )}
                     </div>
                   )}
                 </>
               )
 
-              return card.href || card.mapsUrl ? (
+              return card.href ? (
                 <a
                   key={card.label}
-                  href={card.href || card.mapsUrl}
-                  {...(card.mapsUrl && !card.href ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  href={card.href}
+                  className="group block bg-card border border-border rounded-lg p-6 relative transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[3px_3px_0_rgba(196,90,59,0.2)]"
+                >
+                  {inner}
+                </a>
+              ) : card.mapsUrl ? (
+                <a
+                  key={card.label}
+                  href={card.mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="group block bg-card border border-border rounded-lg p-6 relative transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[3px_3px_0_rgba(196,90,59,0.2)]"
                 >
                   {inner}
@@ -318,24 +342,45 @@ export default function ContactPage() {
               </div>
 
               {/* Why choose card */}
-              <div className="bg-card border border-border rounded-lg p-7">
+              <div ref={whyChooseRef} className="bg-card border border-border rounded-lg p-7">
                 <span className="font-mono text-[0.65rem] uppercase tracking-[0.14em] text-primary/80 mb-4 block">
                   Why IZUIRE
                 </span>
                 <div className="space-y-5">
-                  <div className="flex items-start gap-4">
+                  <div 
+                    className="flex items-start gap-4 transition-all duration-700 ease-out"
+                    style={{ 
+                      opacity: isVisible ? 1 : 0,
+                      transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+                      transitionDelay: '0.1s'
+                    }}
+                  >
                     <div className="font-serif text-2xl text-primary leading-none mt-0.5">100%</div>
                     <div className="text-[0.85rem] text-foreground/60 leading-relaxed">
                       Quality inspection on every bale before shipping
                     </div>
                   </div>
-                  <div className="flex items-start gap-4">
+                  <div 
+                    className="flex items-start gap-4 transition-all duration-700 ease-out"
+                    style={{ 
+                      opacity: isVisible ? 1 : 0,
+                      transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+                      transitionDelay: '0.2s'
+                    }}
+                  >
                     <div className="font-serif text-2xl text-primary leading-none mt-0.5">500+</div>
                     <div className="text-[0.85rem] text-foreground/60 leading-relaxed">
                       Happy resellers across Africa and beyond
                     </div>
                   </div>
-                  <div className="flex items-start gap-4">
+                  <div 
+                    className="flex items-start gap-4 transition-all duration-700 ease-out"
+                    style={{ 
+                      opacity: isVisible ? 1 : 0,
+                      transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+                      transitionDelay: '0.3s'
+                    }}
+                  >
                     <div className="font-serif text-2xl text-primary leading-none mt-0.5">15+</div>
                     <div className="text-[0.85rem] text-foreground/60 leading-relaxed">
                       Countries served with reliable shipping

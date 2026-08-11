@@ -120,8 +120,8 @@ export function ProductPageClient({ productId, initialProduct, initialSuggestion
   if (!product) {
     return (
       <main className="min-h-screen overflow-x-hidden">
-        <Header />
-        <div className="pt-28 pb-20">
+      <Header />
+      <div className="pt-1 pb-20">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="text-center py-12">
               <div className="text-lg text-muted-foreground">Product not found</div>
