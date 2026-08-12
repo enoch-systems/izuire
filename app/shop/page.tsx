@@ -4,13 +4,12 @@ import { useState, useEffect, useMemo, useRef, Suspense, useCallback } from "rea
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { ShoppingBag, ChevronLeft, ChevronRight, ChevronDown, SlidersHorizontal, X, ArrowUpRight, Sparkles, Package, Truck, ShieldCheck } from "lucide-react"
+import { ShoppingBag, ChevronLeft, ChevronRight, ChevronDown, SlidersHorizontal, X, ArrowUpRight, Package, Truck, ShieldCheck, Search, Eye } from "lucide-react"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { useCart } from "@/components/providers/cart-context"
 import { useFlyToCart } from "@/hooks/use-fly-to-cart"
 import { hardcodedProducts, featuredProducts, categories, type HardcodedProduct } from "@/lib/hardcoded-products"
-
 const formatUsdPrice = (value: number | string) =>
   new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -25,12 +24,21 @@ const sortOptions = [
   { label: "Price: High to Low", value: "price-desc" },
   { label: "Name: A-Z", value: "name-asc" },
 ]
+const badgeStyles: Record<string, string> = {
+  "Featured": "bg-primary/90 text-white backdrop-blur-sm",
+  "New": "bg-olive/90 text-white backdrop-blur-sm",
+  "Hot": "bg-accent/90 text-accent-foreground backdrop-blur-sm",
+  "Premium": "bg-foreground/90 text-background backdrop-blur-sm",
+  "Rare": "bg-foreground/90 text-background backdrop-blur-sm",
+  "Luxury": "bg-foreground/90 text-background backdrop-blur-sm",
+  "Sale": "bg-accent/90 text-accent-foreground backdrop-blur-sm",
+}
 
-function ProductCard({ 
-  product, 
-  index, 
-  isVisible 
-}: { 
+function ProductCard({
+  product,
+  index,
+  isVisible
+}: {
   product: HardcodedProduct
   index: number
   isVisible: boolean
@@ -60,77 +68,98 @@ function ProductCard({
       className={`group block w-full transition-all duration-500 ease-out ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
       }`}
-      style={{ transitionDelay: `${index * 80}ms` }}
+      style={{ transitionDelay: `${index * 60}ms` }}
     >
-      <div className="relative bg-card rounded-2xl overflow-hidden border border-border/60 flex flex-col h-full min-w-0 transition-all duration-300 ease-out group-hover:-translate-y-1.5 group-hover:border-border group-hover:shadow-[0_8px_16px_-6px_rgba(0,0,0,0.06),0_20px_40px_-12px_rgba(0,0,0,0.12)]">
-        <Link href={`/product/${product.id}`} className="block">
-          {/* Image — balanced medium height */}
+      <div className="relative bg-card rounded-2xl overflow-hidden border border-border/60 flex flex-col h-full min-w-0 transition-all duration-500 ease-out group-hover:-translate-y-2 group-hover:border-border group-hover:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.25),0_8px_24px_-8px_rgba(0,0,0,0.15)]">
+        {/* Subtle top accent line on hover */}
+        <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-primary via-accent to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20" />
+
+        <Link href={`/product/${product.id}`} className="block flex flex-col flex-1">
+          {/* Image */}
           <div
             ref={imageRef}
             className="relative aspect-[4/3.6] sm:aspect-[4/4] bg-muted overflow-hidden"
           >
             {/* Skeleton */}
-            <div 
+            <div
               className={`absolute inset-0 bg-gradient-to-br from-muted via-muted/50 to-muted animate-pulse transition-opacity duration-500 ${
                 imageLoaded ? 'opacity-0' : 'opacity-100'
               }`}
             />
-            
+
             <Image
               src={product.image || "/placeholder.svg"}
               alt={product.name}
               fill
               sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              className={`object-cover transition-[transform,opacity] duration-500 ease-out group-hover:scale-[1.06] ${
+              className={`object-cover transition-[transform,opacity] duration-700 ease-out group-hover:scale-[1.08] ${
                 imageLoaded ? 'opacity-100' : 'opacity-0'
               }`}
               onLoad={() => setImageLoaded(true)}
             />
-            
-            {/* Stamp Badge */}
+
+            {/* Soft gradient overlay always subtle, stronger on hover */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/5 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
+
+            {/* Badge — refined pill */}
             {product.badge && (
               <span
-                className={`ed-stamp ${
-                  product.badge === "Sale"
-                    ? "ed-stamp-mustard"
-                    : product.badge === "New"
-                    ? "ed-stamp-olive"
-                    : ""
+                className={`absolute top-3 left-3 z-10 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.6rem] sm:text-[0.65rem] font-mono font-semibold uppercase tracking-[0.14em] shadow-lg ${
+                  badgeStyles[product.badge] || "bg-primary/90 text-white backdrop-blur-sm"
                 }`}
               >
+                <span className="w-1.5 h-1.5 rounded-full bg-white/80" />
                 {product.badge}
               </span>
             )}
+
+            {/* Quick view on hover (desktop) */}
+            <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-400 ease-out hidden sm:block">
+              <span className="flex items-center justify-center gap-2 w-full bg-background/95 backdrop-blur-md text-foreground text-[0.7rem] sm:text-[0.75rem] font-mono font-semibold uppercase tracking-[0.14em] rounded-full py-2.5 shadow-lg">
+                <Eye className="w-3.5 h-3.5" />
+                Quick View
+              </span>
+            </div>
           </div>
 
-          {/* Info — compact mobile-style */}
-          <div className="p-2.5 sm:p-4 flex flex-col gap-1 sm:gap-1.5 flex-1 min-w-0">
-            <h3 className="font-serif text-[0.72rem] sm:text-[0.95rem] md:text-[1.05rem] leading-snug line-clamp-1 sm:line-clamp-2 text-foreground">{product.name}</h3>
-            <p className="text-[0.58rem] sm:text-[0.72rem] md:text-[0.78rem] text-muted-foreground leading-relaxed line-clamp-1 sm:line-clamp-2">Graded thrift stock · Class A & B · Sourced from Guangzhou</p>
-            <div className="text-[0.8rem] sm:text-[1rem] md:text-[1.1rem] font-semibold tracking-tight text-foreground">
-              {formatUsdPrice(product.price)}
+          {/* Info */}
+          <div className="p-3 sm:p-5 flex flex-col gap-1.5 sm:gap-2 flex-1 min-w-0">
+            <div className="flex items-center gap-2">
+              <span className="text-[0.5rem] sm:text-[0.65rem] font-mono uppercase tracking-[0.14em] sm:tracking-[0.16em] text-primary font-semibold">
+                {product.category}
+              </span>
+              <span className="w-1 h-1 rounded-full bg-primary/40" />
+              <span className="text-[0.5rem] sm:text-[0.65rem] font-mono uppercase tracking-[0.14em] sm:tracking-[0.16em] text-muted-foreground">
+                Grade A
+              </span>
+            </div>
+            <h3 className="font-sans font-medium text-[0.68rem] sm:text-[1rem] md:text-[1.1rem] leading-snug line-clamp-1 sm:line-clamp-2 text-foreground group-hover:text-primary transition-colors duration-300">
+              {product.name}
+            </h3>
+            <p className="text-[0.6rem] sm:text-[0.72rem] md:text-[0.78rem] text-muted-foreground leading-relaxed line-clamp-1 sm:line-clamp-2">
+              {product.description}
+            </p>
+            <div className="mt-auto pt-2 sm:pt-3 flex items-baseline justify-between gap-2">
+              <div className="text-[0.9rem] sm:text-[1.1rem] md:text-[1.25rem] font-semibold tracking-tight text-foreground">
+                {formatUsdPrice(product.price)}
+              </div>
+              <span className="text-[0.55rem] sm:text-[0.6rem] font-mono uppercase tracking-wider text-muted-foreground">
+                / bale
+              </span>
             </div>
           </div>
         </Link>
 
-        {/* Buttons — stacked on mobile (Add above View), side-by-side on sm+ */}
-        <div className="px-2.5 pb-2.5 sm:px-4 sm:pb-4">
-          <div className="flex flex-col sm:flex-row gap-1.5 sm:gap-2">
-            <button
-              type="button"
-              onClick={handleAdd}
-              className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-full bg-primary text-primary-foreground text-[0.65rem] sm:text-[0.72rem] md:text-[0.78rem] font-semibold tracking-wide px-2 sm:px-3 py-2 sm:py-2.5 transition-all duration-300 ease-out hover:bg-primary/90 active:scale-[0.97]"
-            >
-              <ShoppingBag className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-              Add to Cart
-            </button>
-            <Link
-              href={`/product/${product.id}`}
-              className="flex-1 inline-flex items-center justify-center rounded-full border border-border bg-card text-foreground text-[0.65rem] sm:text-[0.72rem] md:text-[0.78rem] font-semibold tracking-wide px-2 sm:px-3 py-2 sm:py-2.5 transition-all duration-300 ease-out hover:border-foreground active:scale-[0.97]"
-            >
-              View
-            </Link>
-          </div>
+        {/* Buttons — premium */}
+        <div className="px-3 pb-3 sm:px-5 sm:pb-5">
+          <button
+            type="button"
+            onClick={handleAdd}
+            className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-foreground text-background text-[0.65rem] sm:text-[0.78rem] font-mono font-semibold uppercase tracking-[0.12em] px-3 py-2 sm:py-3 transition-all duration-300 ease-out hover:bg-primary hover:text-white hover:shadow-[0_8px_24px_-6px_rgba(196,90,59,0.5)] active:scale-[0.97]"
+          >
+            <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            Add to Cart
+          </button>
         </div>
       </div>
     </div>
@@ -176,7 +205,7 @@ function ShopPageContent() {
     // Search filter
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase().trim()
-      products = products.filter(p => 
+      products = products.filter(p =>
         p.name.toLowerCase().includes(query) ||
         p.description.toLowerCase().includes(query) ||
         p.category.toLowerCase().includes(query)
@@ -231,13 +260,13 @@ function ShopPageContent() {
     const delta = 1
     let start = Math.max(1, currentPage - delta)
     let end = Math.min(totalPages, currentPage + delta)
-    
+
     if (currentPage === 1) {
       end = Math.min(totalPages, 3)
     } else if (currentPage === totalPages) {
       start = Math.max(1, totalPages - 2)
     }
-    
+
     return Array.from({ length: end - start + 1 }, (_, i) => start + i)
   }
 
@@ -295,79 +324,84 @@ function ShopPageContent() {
     <main className="min-h-screen overflow-x-hidden">
       <Header />
 
-      {/* Back button */}
-      <div className="pt-6">
-        <div className="max-w-[1140px] mx-auto px-6">
+      {/* Hero Section */}
+      <section className="relative border-b border-border overflow-hidden">
+        {/* Ambient background accents */}
+        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-primary/5 blur-[100px] pointer-events-none" />
+        <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-accent/5 blur-[100px] pointer-events-none" />
+
+        <div className="relative max-w-[1140px] mx-auto px-6 pt-10 pb-12 md:pt-16 md:pb-16">
+          {/* Back button */}
           <button
             type="button"
             onClick={() => window.history.back()}
-            className="inline-flex items-center gap-1.5 font-mono text-[0.78rem] uppercase tracking-[0.08em] text-foreground/70 hover:text-foreground boty-transition cursor-pointer"
+            className="inline-flex items-center gap-1.5 font-mono text-[0.72rem] uppercase tracking-[0.08em] text-foreground/60 hover:text-foreground boty-transition cursor-pointer mb-8"
           >
             <ChevronLeft className="w-4 h-4" />
             Back
           </button>
-        </div>
-      </div>
 
-      {/* Header */}
-      <div className="max-w-[1140px] mx-auto px-6 pt-6 pb-6">
-        <div className="max-w-2xl">
-          <div className="eyebrow font-mono text-[0.78rem] uppercase tracking-[0.18em] text-primary mb-4 flex items-center gap-2.5">
-            <span className="w-7 h-[2px] bg-primary inline-block" />
-            Shop
-          </div>
-          <h1 className="font-serif text-[clamp(2.4rem,6vw,4.2rem)] leading-[1.04] tracking-[-0.01em] mb-5">
-            Premium <em className="not-italic text-primary">Thrift Bales</em>
-          </h1>
-          <p className="text-[1.05rem] text-foreground/70 max-w-[520px]">
-            Browse our curated collection of high-quality thrift bales, sorted and graded for resale success.
-          </p>
-          
-          {/* Search Bar */}
-          <div className="mt-6 max-w-xl">
-            <div className="relative">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search bales by name, category..."
-                className="w-full bg-card border border-border rounded-xl pl-12 pr-4 py-3.5 text-[0.95rem] text-foreground placeholder:text-foreground/35 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
-              />
-              <svg
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          <div className="max-w-2xl">
+            <div className="eyebrow font-mono text-[0.78rem] uppercase tracking-[0.18em] text-primary mb-4 flex items-center gap-2.5">
+              <span className="w-7 h-[2px] bg-primary inline-block" />
+              Shop
+            </div>
+            <h1 className="font-serif text-[clamp(2.4rem,6vw,4.2rem)] leading-[1.04] tracking-[-0.01em] mb-5">
+              Premium <em className="not-italic text-primary">Thrift Bales</em>
+            </h1>
+            <p className="text-[1.05rem] text-foreground/70 max-w-[520px]">
+              Browse our curated collection of high-quality thrift bales, sorted and graded for resale success.
+            </p>
+
+            {/* Search Bar */}
+            <div className="mt-7 max-w-xl">
+              <div className="relative group">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search bales by name, category..."
+                  className="w-full bg-card border border-border rounded-xl pl-12 pr-4 py-3.5 text-[0.95rem] text-foreground placeholder:text-foreground/35 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
                 />
-              </svg>
+              </div>
+            </div>
+          </div>
+
+          {/* Trust badges */}
+          <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3">
+            <div className="flex items-center gap-2 text-[0.72rem] font-mono uppercase tracking-wider text-foreground/60">
+              <Truck className="w-4 h-4 text-primary" />
+              Fast Delivery
+            </div>
+            <div className="flex items-center gap-2 text-[0.72rem] font-mono uppercase tracking-wider text-foreground/60">
+              <ShieldCheck className="w-4 h-4 text-primary" />
+              Quality Graded
+            </div>
+            <div className="flex items-center gap-2 text-[0.72rem] font-mono uppercase tracking-wider text-foreground/60">
+              <Package className="w-4 h-4 text-primary" />
+              Sourced in Guangzhou
             </div>
           </div>
         </div>
-      </div>
-      
+      </section>
+
       {/* Featured Products */}
       <section className="border-b border-border">
-        <div className="max-w-[1140px] mx-auto px-6 py-16">
-          <div className="flex items-end justify-between mb-10">
+        <div className="max-w-[1140px] mx-auto px-6 py-14 md:py-16">
+          <div className="flex items-end justify-between mb-8 md:mb-10">
             <div>
               <div className="eyebrow font-mono text-[0.78rem] uppercase tracking-[0.18em] text-primary mb-3 flex items-center gap-2.5">
                 <span className="w-7 h-[2px] bg-primary inline-block" />
                 Handpicked
               </div>
-              <h2 className="font-serif text-3xl md:text-4xl text-foreground">Featured Bales</h2>
+              <h2 className="font-serif text-2xl md:text-4xl text-foreground">Featured Bales</h2>
             </div>
             <Link href="#products" className="hidden md:inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-foreground/70 hover:text-primary boty-transition">
               View All <ArrowUpRight className="w-4 h-4" />
             </Link>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
             {featuredProducts.slice(0, 4).map((product, index) => (
               <ProductCard
                 key={product.id}
@@ -381,10 +415,10 @@ function ShopPageContent() {
       </section>
 
       {/* Products Section */}
-      <section id="products" className="pt-16 pb-20">
+      <section id="products" className="pt-14 pb-20">
         <div className="max-w-[1140px] mx-auto px-6">
           {/* Section Header */}
-          <div className="text-center mb-12">
+          <div className="text-center mb-10">
             <div className="eyebrow font-mono text-[0.78rem] uppercase tracking-[0.18em] text-primary mb-3 flex items-center justify-center gap-2.5">
               <span className="w-7 h-[2px] bg-primary inline-block" />
               The Collection
@@ -508,9 +542,9 @@ function ShopPageContent() {
           </div>
 
           {/* Product Grid */}
-          <div 
+          <div
             ref={gridRef}
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6"
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6"
           >
             {currentProducts.map((product, index) => (
               <ProductCard

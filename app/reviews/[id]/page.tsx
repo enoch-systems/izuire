@@ -212,7 +212,7 @@ export default function ReviewDetailPage({ params }: { params: Promise<{ id: str
         },
         body: JSON.stringify({
           author_name: userName.trim() || "You",
-          author_avatar: "/placeholder-user.jpg",
+          author_avatar: "https://res.cloudinary.com/djdbcoyot/image/upload/v1786553251/gtnizvboye5kfupmx74k.jpg",
           text: pendingComment,
         }),
       })
@@ -525,7 +525,7 @@ export default function ReviewDetailPage({ params }: { params: Promise<{ id: str
                 <form onSubmit={handleAddComment} className="mb-6">
                   <div className="flex flex-col gap-3 sm:flex-row">
                     <Image
-                      src="/placeholder-user.jpg"
+                      src="https://res.cloudinary.com/djdbcoyot/image/upload/v1786553251/gtnizvboye5kfupmx74k.jpg"
                       alt="Your avatar"
                       width={40}
                       height={40}

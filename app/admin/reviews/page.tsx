@@ -48,8 +48,8 @@ export default function AdminReviewsPage() {
     comment: "",
     productName: "",
     productId: "",
-    productImage: "https://res.cloudinary.com/deafv5ovi/image/upload/v1785659333/product_kbhg7v.png",
-    customerAvatar: "/placeholder-user.jpg",
+    productImage: "https://res.cloudinary.com/djdbcoyot/image/upload/v1786553251/gtnizvboye5kfupmx74k.jpg",
+    customerAvatar: "https://res.cloudinary.com/djdbcoyot/image/upload/v1786553251/gtnizvboye5kfupmx74k.jpg",
     likes: 0,
     date: new Date().toISOString().split("T")[0],
   })
@@ -247,8 +247,8 @@ export default function AdminReviewsPage() {
       comment: "",
       productName: "",
       productId: "",
-      productImage: "https://res.cloudinary.com/deafv5ovi/image/upload/v1785659333/product_kbhg7v.png",
-      customerAvatar: "/placeholder-user.jpg",
+      productImage: "https://res.cloudinary.com/djdbcoyot/image/upload/v1786553251/gtnizvboye5kfupmx74k.jpg",
+      customerAvatar: "https://res.cloudinary.com/djdbcoyot/image/upload/v1786553251/gtnizvboye5kfupmx74k.jpg",
       likes: 0,
       date: new Date().toISOString().split("T")[0],
     })
@@ -301,7 +301,7 @@ export default function AdminReviewsPage() {
         ...prev,
         productId: selectedProduct.id,
         productName: selectedProduct.name,
-        productImage: selectedProduct.images[0] || "https://res.cloudinary.com/deafv5ovi/image/upload/v1785659333/product_kbhg7v.png"
+        productImage: selectedProduct.images[0] || "https://res.cloudinary.com/djdbcoyot/image/upload/v1786553251/gtnizvboye5kfupmx74k.jpg"
       }))
       setShowProductDropdown(false)
     }
@@ -312,7 +312,7 @@ export default function AdminReviewsPage() {
       ...prev,
       productName: value,
       productId: "",
-      productImage: "https://res.cloudinary.com/deafv5ovi/image/upload/v1785659333/product_kbhg7v.png",
+      productImage: "https://res.cloudinary.com/djdbcoyot/image/upload/v1786553251/gtnizvboye5kfupmx74k.jpg",
     }))
     setShowProductDropdown(true)
   }
@@ -391,13 +391,13 @@ export default function AdminReviewsPage() {
     try {
       const reviewData = {
         customer_name: reviewForm.customerName.trim() || "Unnamed Customer",
-        customer_avatar: reviewForm.customerAvatar || "/placeholder-user.jpg",
+        customer_avatar: reviewForm.customerAvatar || "https://res.cloudinary.com/djdbcoyot/image/upload/v1786553251/gtnizvboye5kfupmx74k.jpg",
         location,
         rating: Number(reviewForm.rating) || 5,
         comment: reviewForm.comment.trim() || "No comment provided",
         product_name: reviewForm.productName.trim() || "Unknown product",
         product_id: reviewForm.productId || null,
-        product_image: reviewForm.productImage || "https://res.cloudinary.com/deafv5ovi/image/upload/v1785659333/product_kbhg7v.png",
+        product_image: reviewForm.productImage || "https://res.cloudinary.com/djdbcoyot/image/upload/v1786553251/gtnizvboye5kfupmx74k.jpg",
         media: reviewPreviewMedia,
         likes: Number(reviewForm.likes) || 0,
         date: reviewForm.date || new Date().toISOString().split("T")[0],

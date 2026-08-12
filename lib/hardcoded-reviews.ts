@@ -11,6 +11,8 @@ export interface HardcodedReview {
   gallery: string[]
 }
 
+const NEW_IMAGE_URL = "https://res.cloudinary.com/djdbcoyot/image/upload/v1786553251/gtnizvboye5kfupmx74k.jpg"
+
 export const hardcodedReviews: HardcodedReview[] = [
   {
     id: "review-001",
@@ -20,12 +22,12 @@ export const hardcodedReviews: HardcodedReview[] = [
     text: "IZUIRE has transformed my business. The quality of thrift bales I receive is consistently excellent. Every item is properly sorted and graded. My customers love the quality!",
     date: "2024-01-15",
     product: "Premium Mixed Bale",
-    image: "/placeholder-user.jpg",
-    productImage: "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=600&h=450&fit=crop",
+    image: NEW_IMAGE_URL,
+    productImage: NEW_IMAGE_URL,
     gallery: [
-      "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=600&h=450&fit=crop",
-      "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=600&h=450&fit=crop",
-      "https://images.unsplash.com/photo-1434389677669-e08b4cda3a0c?w=600&h=450&fit=crop"
+      NEW_IMAGE_URL,
+      NEW_IMAGE_URL,
+      NEW_IMAGE_URL
     ]
   },
   {
@@ -36,12 +38,12 @@ export const hardcodedReviews: HardcodedReview[] = [
     text: "Best sourcing service in China! They inspect every bale before shipping. I've been ordering for 6 months and the quality never disappoints. Highly recommended!",
     date: "2024-01-12",
     product: "Silk Fabric Bale",
-    image: "/placeholder-user.jpg",
-    productImage: "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=600&h=450&fit=crop",
+    image: NEW_IMAGE_URL,
+    productImage: NEW_IMAGE_URL,
     gallery: [
-      "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=600&h=450&fit=crop",
-      "https://images.unsplash.com/photo-1434389677669-e08b4cda3a0c?w=600&h=450&fit=crop",
-      "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=600&h=450&fit=crop"
+      NEW_IMAGE_URL,
+      NEW_IMAGE_URL,
+      NEW_IMAGE_URL
     ]
   },
   {
@@ -52,12 +54,12 @@ export const hardcodedReviews: HardcodedReview[] = [
     text: "The service charge is worth every penny. They saved me from buying low-quality stock. Now I only order through IZUIRE. My resale business has grown 3x!",
     date: "2024-01-10",
     product: "Sneaker Bale",
-    image: "/placeholder-user.jpg",
-    productImage: "https://images.unsplash.com/photo-1434389677669-e08b4cda3a0c?w=600&h=450&fit=crop",
+    image: NEW_IMAGE_URL,
+    productImage: NEW_IMAGE_URL,
     gallery: [
-      "https://images.unsplash.com/photo-1434389677669-e08b4cda3a0c?w=600&h=450&fit=crop",
-      "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=600&h=450&fit=crop",
-      "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=600&h=450&fit=crop"
+      NEW_IMAGE_URL,
+      NEW_IMAGE_URL,
+      NEW_IMAGE_URL
     ]
   },
   {
@@ -68,12 +70,12 @@ export const hardcodedReviews: HardcodedReview[] = [
     text: "Professional team with excellent communication. They send photos and videos of the bales before shipping. Very transparent and trustworthy service.",
     date: "2024-01-08",
     product: "Women's Fashion Bale",
-    image: "/placeholder-user.jpg",
-    productImage: "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=600&h=450&fit=crop",
+    image: NEW_IMAGE_URL,
+    productImage: NEW_IMAGE_URL,
     gallery: [
-      "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=600&h=450&fit=crop",
-      "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=600&h=450&fit=crop",
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=450&fit=crop"
+      NEW_IMAGE_URL,
+      NEW_IMAGE_URL,
+      NEW_IMAGE_URL
     ]
   },
   {
@@ -84,12 +86,12 @@ export const hardcodedReviews: HardcodedReview[] = [
     text: "Fast shipping and excellent packaging. The bales arrived in perfect condition. Will definitely order again. The quality grading system is top-notch!",
     date: "2024-01-05",
     product: "Designer Brand Bale",
-    image: "/placeholder-user.jpg",
-    productImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=450&fit=crop",
+    image: NEW_IMAGE_URL,
+    productImage: NEW_IMAGE_URL,
     gallery: [
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=450&fit=crop",
-      "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=600&h=450&fit=crop",
-      "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=600&h=450&fit=crop"
+      NEW_IMAGE_URL,
+      NEW_IMAGE_URL,
+      NEW_IMAGE_URL
     ]
   },
   {
@@ -100,12 +102,12 @@ export const hardcodedReviews: HardcodedReview[] = [
     text: "I was skeptical at first, but after my first order I'm a loyal customer. The mixed bales have great variety. Perfect for my retail shop!",
     date: "2024-01-03",
     product: "Mixed Shoe Bale",
-    image: "/placeholder-user.jpg",
-    productImage: "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=600&h=450&fit=crop",
+    image: NEW_IMAGE_URL,
+    productImage: NEW_IMAGE_URL,
     gallery: [
-      "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=600&h=450&fit=crop",
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=450&fit=crop",
-      "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=600&h=450&fit=crop"
+      NEW_IMAGE_URL,
+      NEW_IMAGE_URL,
+      NEW_IMAGE_URL
     ]
   },
   {
@@ -116,12 +118,12 @@ export const hardcodedReviews: HardcodedReview[] = [
     text: "The inspection service is invaluable. They caught damaged items before shipping and replaced them. True professionals who care about their clients.",
     date: "2024-01-01",
     product: "Premium Mixed Bale",
-    image: "/placeholder-user.jpg",
-    productImage: "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=600&h=450&fit=crop",
+    image: NEW_IMAGE_URL,
+    productImage: NEW_IMAGE_URL,
     gallery: [
-      "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=600&h=450&fit=crop",
-      "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=600&h=450&fit=crop",
-      "https://images.unsplash.com/photo-1434389677669-e08b4cda3a0c?w=600&h=450&fit=crop"
+      NEW_IMAGE_URL,
+      NEW_IMAGE_URL,
+      NEW_IMAGE_URL
     ]
   },
   {
@@ -132,12 +134,12 @@ export const hardcodedReviews: HardcodedReview[] = [
     text: "Great prices and quality. The ¥500 full-day service is a bargain for the quality you get. They even helped me negotiate with suppliers.",
     date: "2023-12-28",
     product: "Men's Business Wear Bale",
-    image: "/placeholder-user.jpg",
-    productImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=450&fit=crop",
+    image: NEW_IMAGE_URL,
+    productImage: NEW_IMAGE_URL,
     gallery: [
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=450&fit=crop",
-      "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=600&h=450&fit=crop",
-      "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=600&h=450&fit=crop"
+      NEW_IMAGE_URL,
+      NEW_IMAGE_URL,
+      NEW_IMAGE_URL
     ]
   },
   {
@@ -148,12 +150,12 @@ export const hardcodedReviews: HardcodedReview[] = [
     text: "I've tried other sourcing agents, but IZUIRE is different. They actually care about quality. Every bale I've received has been worth the investment.",
     date: "2023-12-25",
     product: "Fashion Accessories Bale",
-    image: "/placeholder-user.jpg",
-    productImage: "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=600&h=450&fit=crop",
+    image: NEW_IMAGE_URL,
+    productImage: NEW_IMAGE_URL,
     gallery: [
-      "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=600&h=450&fit=crop",
-      "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=600&h=450&fit=crop",
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=450&fit=crop"
+      NEW_IMAGE_URL,
+      NEW_IMAGE_URL,
+      NEW_IMAGE_URL
     ]
   },
   {
@@ -164,12 +166,12 @@ export const hardcodedReviews: HardcodedReview[] = [
     text: "The WhatsApp support is very responsive. Any questions I have are answered quickly. Makes the whole ordering process smooth and easy.",
     date: "2023-12-22",
     product: "Children's Clothing Bale",
-    image: "/placeholder-user.jpg",
-    productImage: "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=600&h=450&fit=crop",
+    image: NEW_IMAGE_URL,
+    productImage: NEW_IMAGE_URL,
     gallery: [
-      "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=600&h=450&fit=crop",
-      "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=600&h=450&fit=crop",
-      "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=600&h=450&fit=crop"
+      NEW_IMAGE_URL,
+      NEW_IMAGE_URL,
+      NEW_IMAGE_URL
     ]
   },
   {
@@ -180,12 +182,12 @@ export const hardcodedReviews: HardcodedReview[] = [
     text: "Love the variety of products available. From fabrics to shoes, they have it all. Makes my sourcing trips to China much more efficient.",
     date: "2023-12-20",
     product: "Cotton Fabric Bale",
-    image: "/placeholder-user.jpg",
-    productImage: "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=600&h=450&fit=crop",
+    image: NEW_IMAGE_URL,
+    productImage: NEW_IMAGE_URL,
     gallery: [
-      "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=600&h=450&fit=crop",
-      "https://images.unsplash.com/photo-1434389677669-e08b4cda3a0c?w=600&h=450&fit=crop",
-      "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=600&h=450&fit=crop"
+      NEW_IMAGE_URL,
+      NEW_IMAGE_URL,
+      NEW_IMAGE_URL
     ]
   },
   {
@@ -196,12 +198,12 @@ export const hardcodedReviews: HardcodedReview[] = [
     text: "Third order and still impressed. The grading system ensures you know exactly what quality to expect. No surprises, just quality products every time.",
     date: "2023-12-18",
     product: "Premium Mixed Bale",
-    image: "/placeholder-user.jpg",
-    productImage: "https://images.unsplash.com/photo-1434389677669-e08b4cda3a0c?w=600&h=450&fit=crop",
+    image: NEW_IMAGE_URL,
+    productImage: NEW_IMAGE_URL,
     gallery: [
-      "https://images.unsplash.com/photo-1434389677669-e08b4cda3a0c?w=600&h=450&fit=crop",
-      "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=600&h=450&fit=crop",
-      "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=600&h=450&fit=crop"
+      NEW_IMAGE_URL,
+      NEW_IMAGE_URL,
+      NEW_IMAGE_URL
     ]
   }
 ]

@@ -1,21 +1,26 @@
 "use client"
 
-import { useState, useEffect, useCallback, useRef } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { ChevronLeft, Minus, Plus, ChevronDown, ShoppingBag, Heart, Recycle, Award, Star, Check, ShieldCheck, Package, Truck } from "lucide-react"
+import { ChevronLeft, Minus, Plus, ChevronDown, ShoppingBag, Star, Check, ShieldCheck, Package, Truck } from "lucide-react"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { useCart } from "@/components/providers/cart-context"
 import { hardcodedProducts, type HardcodedProduct } from "@/lib/hardcoded-products"
 
-const benefits = [
-  { icon: ShieldCheck, label: "100% Inspected" },
-  { icon: Heart, label: "Premium Quality" },
-  { icon: Recycle, label: "Properly Graded" },
-  { icon: Award, label: "Ready for Resale" }
-]
+const NEW_IMAGE_URL = "https://res.cloudinary.com/djdbcoyot/image/upload/v1786553251/gtnizvboye5kfupmx74k.jpg"
+
+const categoryFallbackImages: Record<string, string[]> = {
+  bales: [NEW_IMAGE_URL, NEW_IMAGE_URL, NEW_IMAGE_URL, NEW_IMAGE_URL, NEW_IMAGE_URL],
+  fabrics: [NEW_IMAGE_URL, NEW_IMAGE_URL, NEW_IMAGE_URL, NEW_IMAGE_URL, NEW_IMAGE_URL],
+  shoes: [NEW_IMAGE_URL, NEW_IMAGE_URL, NEW_IMAGE_URL, NEW_IMAGE_URL, NEW_IMAGE_URL],
+  accessories: [NEW_IMAGE_URL, NEW_IMAGE_URL, NEW_IMAGE_URL, NEW_IMAGE_URL, NEW_IMAGE_URL],
+  household: [NEW_IMAGE_URL, NEW_IMAGE_URL, NEW_IMAGE_URL, NEW_IMAGE_URL, NEW_IMAGE_URL],
+  electronics: [NEW_IMAGE_URL, NEW_IMAGE_URL, NEW_IMAGE_URL, NEW_IMAGE_URL, NEW_IMAGE_URL],
+  sportswear: [NEW_IMAGE_URL, NEW_IMAGE_URL, NEW_IMAGE_URL, NEW_IMAGE_URL, NEW_IMAGE_URL],
+}
 
 const formatUsdPrice = (value: number | string) =>
   new Intl.NumberFormat("en-US", {
@@ -46,14 +51,21 @@ export function ProductPageClient({ productId, initialProduct, initialSuggestion
   const [selectedImageIndex, setSelectedImageIndex] = useState(0)
   const [preloaded, setPreloaded] = useState(false)
 
+  const fallbackImages = categoryFallbackImages[product.category] ?? []
+  const productImages = product.images && product.images.length > 0
+    ? product.images.slice(0, 5)
+    : [product.image, ...fallbackImages.filter((src) => src !== product.image).slice(0, 4)]
+  const thumbnails = Array.from({ length: 5 }, (_, index) => productImages[index] ?? productImages[0])
+  const currentImageUrl = thumbnails[selectedImageIndex]
+
   // Preload product image
   useEffect(() => {
     if (!product || preloaded) return
     const img = new window.Image()
-    img.src = product.image
+    img.src = currentImageUrl
     img.onload = () => setPreloaded(true)
     img.onerror = () => setPreloaded(true)
-  }, [product, preloaded])
+  }, [product, preloaded, currentImageUrl])
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -154,7 +166,7 @@ export function ProductPageClient({ productId, initialProduct, initialSuggestion
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Header />
-      <div className="pt-28 pb-20">
+      <div className="pt-6 pb-20">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <Link href="/shop" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground boty-transition mb-8">
             <ChevronLeft className="w-4 h-4" />
@@ -163,10 +175,10 @@ export function ProductPageClient({ productId, initialProduct, initialSuggestion
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20">
             {/* Product Image */}
             <div className="flex flex-col gap-4">
-              <div className="relative rounded-3xl overflow-hidden bg-card boty-shadow aspect-[4/5]">
+              <div className="relative rounded-2xl overflow-hidden bg-card boty-shadow aspect-[4/5]">
                 <Image
-                  src={product.image}
-                  alt={product.name}
+                  src={currentImageUrl}
+                  alt={`${product.name} image`}
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover boty-transition"
@@ -179,13 +191,23 @@ export function ProductPageClient({ productId, initialProduct, initialSuggestion
                 )}
               </div>
 
-              {/* Benefits */}
-              <div className="grid grid-cols-2 gap-3">
-                {benefits.map((benefit) => (
-                  <div key={benefit.label} className="flex items-center gap-2.5 bg-card rounded-xl px-4 py-3 boty-shadow">
-                    <benefit.icon className="w-4 h-4 text-primary flex-shrink-0" />
-                    <span className="text-xs font-medium text-foreground">{benefit.label}</span>
-                  </div>
+              <div className="grid grid-cols-5 gap-3">
+                {thumbnails.map((src, index) => (
+                  <button
+                    key={`thumb-${index}`}
+                    type="button"
+                    onClick={() => setSelectedImageIndex(index)}
+                    aria-label={`Show thumbnail ${index + 1}`}
+                    className={`relative aspect-square overflow-hidden rounded-xl transition-all duration-200 ${selectedImageIndex === index ? "ring-2 ring-amber-400" : "border border-border/50"} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300`}
+                  >
+                    <Image
+                      src={src}
+                      alt={`${product.name} thumbnail ${index + 1}`}
+                      fill
+                      sizes="(max-width: 1024px) 20vw, 10vw"
+                      className="object-cover"
+                    />
+                  </button>
                 ))}
               </div>
             </div>
@@ -283,33 +305,64 @@ export function ProductPageClient({ productId, initialProduct, initialSuggestion
 
       {/* Suggestions */}
       {suggestions.length > 0 && (
-        <section className="py-20 bg-background border-t border-border">
-          <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="font-serif text-3xl md:text-4xl text-foreground">You May Also Like</h2>
+        <section className="py-24 bg-background border-t border-border relative overflow-hidden">
+          {/* Decorative glow */}
+          <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+            <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full bg-primary/5 blur-3xl" />
+          </div>
+
+          <div className="max-w-7xl mx-auto px-6 lg:px-8 relative">
+            {/* Section header */}
+            <div className="text-center mb-14">
+              <div className="inline-flex items-center gap-3 mb-4">
+                <span className="h-px w-8 bg-primary/40" />
+                <span className="text-[11px] tracking-[0.3em] uppercase text-primary font-mono">Curated for you</span>
+                <span className="h-px w-8 bg-primary/40" />
+              </div>
+              <h2 className="font-serif text-3xl md:text-5xl text-foreground mb-4">You May Also Like</h2>
+              <p className="text-muted-foreground max-w-md mx-auto text-sm leading-relaxed">
+                Hand-picked premium bales to complete your collection.
+              </p>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+            {/* Product grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
               {suggestions.map((suggestion) => (
-                <div key={suggestion.id} className="group transition-all duration-500 ease-out opacity-100 scale-100">
-                  <Link href={`/product/${suggestion.id}`}>
-                    <div className="bg-card rounded-3xl overflow-hidden boty-shadow boty-transition group-hover:scale-[1.02]">
+                <div key={suggestion.id} className="group relative">
+                  <Link href={`/product/${suggestion.id}`} className="block">
+                    <div className="relative bg-card rounded-2xl overflow-hidden boty-shadow boty-transition group-hover:-translate-y-1.5 group-hover:shadow-xl">
+                      {/* Image */}
                       <div className="relative aspect-square bg-muted overflow-hidden">
-                        <Image src={suggestion.image} alt={suggestion.name} fill sizes="(max-width: 640px) 50vw, 25vw" className="object-cover boty-transition group-hover:scale-105" />
+                        <Image src={suggestion.image} alt={suggestion.name} fill sizes="(max-width: 640px) 50vw, 25vw" className="object-cover boty-transition group-hover:scale-110" />
+                        {/* Gradient overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 group-hover:opacity-100 boty-transition" />
+                        {/* Editorial stamp badge */}
                         {suggestion.badge && (
-                          <span className="absolute top-2 left-2 px-2 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase backdrop-blur-sm bg-white/80 text-foreground boty-shadow">
-                            {suggestion.badge}
-                          </span>
+                          <span className="ed-stamp">{suggestion.badge}</span>
                         )}
-                      </div>
-                      <div className="p-3 md:p-5 pb-4">
-                        <h3 className="font-serif text-sm md:text-lg text-foreground mb-0.5 md:mb-1">{suggestion.name}</h3>
-                        <div className="flex items-center gap-2 mb-2 md:mb-3">
-                          <span className="text-xs md:text-base font-medium text-foreground">{formatUsdPrice(suggestion.price)}</span>
+                        {/* Quick add on hover */}
+                        <div className="absolute bottom-3 left-3 right-3 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 boty-transition">
+                          <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation() }} className="w-full inline-flex items-center justify-center gap-2 bg-foreground text-background px-4 py-2.5 rounded-full text-[11px] font-mono font-bold uppercase tracking-widest boty-transition hover:bg-primary hover:text-primary-foreground boty-shadow">
+                            <ShoppingBag className="w-3.5 h-3.5" />
+                            Quick Add
+                          </button>
                         </div>
-                        <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation() }} className="w-full inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground px-3 py-1.5 md:px-4 md:py-2.5 rounded-full text-[10px] md:text-xs tracking-wide boty-transition hover:bg-primary/90 boty-shadow">
-                          <ShoppingBag className="w-3 h-3 md:w-3.5 md:h-3.5" />
-                          Add to Cart
-                        </button>
+                      </div>
+                      {/* Content */}
+                      <div className="p-4 md:p-5">
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-[9px] md:text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-mono">{suggestion.category}</span>
+                          <div className="flex">
+                            {[...Array(5)].map((_, i) => (
+                              <Star key={i} className="w-3 h-3 fill-accent text-accent" />
+                            ))}
+                          </div>
+                        </div>
+                        <h3 className="font-serif text-sm md:text-base text-foreground mb-2 leading-snug line-clamp-2">{suggestion.name}</h3>
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-base md:text-lg font-medium text-foreground">{formatUsdPrice(suggestion.price)}</span>
+                          <span className="text-[10px] text-muted-foreground font-mono">/ bale</span>
+                        </div>
                       </div>
                     </div>
                   </Link>

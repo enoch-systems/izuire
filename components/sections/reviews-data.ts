@@ -29,8 +29,9 @@ export interface ReviewComment {
   likes?: number
 }
 
-const DEFAULT_AVATAR = "/placeholder-user.jpg"
-const DEFAULT_PRODUCT_IMAGE = "https://res.cloudinary.com/deafv5ovi/image/upload/v1785659333/product_kbhg7v.png"
+const NEW_IMAGE_URL = "https://res.cloudinary.com/djdbcoyot/image/upload/v1786553251/gtnizvboye5kfupmx74k.jpg"
+const DEFAULT_AVATAR = NEW_IMAGE_URL
+const DEFAULT_PRODUCT_IMAGE = NEW_IMAGE_URL
 
 export function normalizeReviewComment(comment: Partial<ReviewComment> & Record<string, any>): ReviewComment {
   return {

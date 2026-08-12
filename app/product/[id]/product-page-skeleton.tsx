@@ -8,7 +8,7 @@ export function ProductPageSkeleton() {
       {/* Header skeleton */}
       <div className="h-20 bg-muted" />
 
-      <div className="pt-28 pb-20">
+      <div className="pt-2 pb-20">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           {/* Back button skeleton */}
           <div className="h-4 w-32 bg-muted rounded mb-8" />

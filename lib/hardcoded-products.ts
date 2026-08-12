@@ -5,8 +5,11 @@ export interface HardcodedProduct {
   price: number
   category: string
   image: string
+  images?: string[]
   badge?: string
 }
+
+const NEW_IMAGE_URL = "https://res.cloudinary.com/djdbcoyot/image/upload/v1786553251/gtnizvboye5kfupmx74k.jpg"
 
 export const hardcodedProducts: HardcodedProduct[] = [
   // Premium Mixed Thrift Bales (20 items)
@@ -16,7 +19,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "High-quality mixed clothing bale, carefully sorted and graded in Guangzhou. Perfect for resellers.",
     price: 450,
     category: "bales",
-    image: "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
     badge: "Featured"
   },
   {
@@ -25,7 +28,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Lightweight summer clothing bale featuring t-shirts, shorts, and dresses. Sorted by season.",
     price: 380,
     category: "bales",
-    image: "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   {
     id: "bale-003",
@@ -33,7 +36,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Thick jackets, sweaters, and warm clothing. Graded for quality before baling.",
     price: 520,
     category: "bales",
-    image: "https://images.unsplash.com/photo-1434389677669-e08b4cda3a0c?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   {
     id: "bale-004",
@@ -41,7 +44,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Kids clothing bale with various sizes. All items inspected for quality.",
     price: 320,
     category: "bales",
-    image: "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   {
     id: "bale-005",
@@ -49,7 +52,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Professional clothing including dress shirts, trousers, and blazers. Perfect for office resale.",
     price: 480,
     category: "bales",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   {
     id: "bale-006",
@@ -57,7 +60,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Trendy women's clothing including blouses, dresses, and skirts. Curated for quality.",
     price: 420,
     category: "bales",
-    image: "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   {
     id: "bale-007",
@@ -65,7 +68,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Pre-owned sneakers in good condition. Various brands and sizes available.",
     price: 650,
     category: "bales",
-    image: "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
     badge: "New"
   },
   {
@@ -74,7 +77,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Premium branded clothing bale. Items from top brands, carefully selected.",
     price: 850,
     category: "bales",
-    image: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   // Fabric & Textile Bales (10 items)
   {
@@ -83,7 +86,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Premium cotton fabric rolls, perfect for garment manufacturing. Various patterns available.",
     price: 380,
     category: "fabrics",
-    image: "https://images.unsplash.com/photo-1558171813-4c088753afef?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   {
     id: "bale-010",
@@ -91,7 +94,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "High-quality denim fabric for jeans and jackets. Durable and fashionable.",
     price: 420,
     category: "fabrics",
-    image: "https://images.unsplash.com/photo-1542272604-787c3835535d?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   {
     id: "bale-011",
@@ -99,7 +102,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Luxurious silk fabrics in various colors and patterns. Ideal for high-end fashion.",
     price: 750,
     category: "fabrics",
-    image: "https://images.unsplash.com/photo-1528459105426-b9548367069c?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
     badge: "Featured"
   },
   {
@@ -108,7 +111,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Versatile polyester blend fabrics for various applications. Cost-effective bulk option.",
     price: 280,
     category: "fabrics",
-    image: "https://images.unsplash.com/photo-1558171813-4c088753afef?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   // Shoe Bales (10 items)
   {
@@ -117,7 +120,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Variety of shoes including sneakers, formal shoes, and casual wear. All inspected.",
     price: 580,
     category: "shoes",
-    image: "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   {
     id: "bale-014",
@@ -125,7 +128,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Popular sneaker brands in good condition. Mixed sizes and styles.",
     price: 720,
     category: "shoes",
-    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
     badge: "Hot"
   },
   {
@@ -134,7 +137,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Kids shoes in various sizes. Perfect for retail businesses.",
     price: 320,
     category: "shoes",
-    image: "https://images.unsplash.com/photo-1514989940723-e8e51635b782?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   // Accessories Bales (10 items)
   {
@@ -143,7 +146,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Mixed accessories including belts, scarves, hats, and more. High-quality items.",
     price: 280,
     category: "accessories",
-    image: "https://images.unsplash.com/photo-1523779105320-d1cd346ff52b?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   {
     id: "bale-017",
@@ -151,7 +154,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Designer and premium handbags in excellent condition. Carefully sorted.",
     price: 680,
     category: "accessories",
-    image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
     badge: "Featured"
   },
   {
@@ -160,7 +163,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Fashion jewelry including necklaces, earrings, and bracelets. Various styles.",
     price: 220,
     category: "accessories",
-    image: "https://images.unsplash.com/photo-1515562141589-67f0d569b6c2?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   // Household Items (10 items)
   {
@@ -169,7 +172,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Bed sheets, curtains, and home fabric items. Premium quality graded goods.",
     price: 350,
     category: "household",
-    image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   {
     id: "bale-020",
@@ -177,7 +180,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Mixed kitchen items including linens, aprons, and textiles. Great for resale.",
     price: 260,
     category: "household",
-    image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   {
     id: "bale-021",
@@ -185,7 +188,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Towels, bath mats, and bathroom accessories. All items quality-checked.",
     price: 290,
     category: "household",
-    image: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   // Electronics & Accessories (10 items)
   {
@@ -194,7 +197,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Phone cases, chargers, and accessories. Tested and working condition.",
     price: 340,
     category: "electronics",
-    image: "https://images.unsplash.com/photo-1586105251261-72a756497a11?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   {
     id: "bale-023",
@@ -202,7 +205,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Variety of laptop bags and cases. Different sizes and styles available.",
     price: 280,
     category: "electronics",
-    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   {
     id: "bale-024",
@@ -210,7 +213,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "USB cables, adapters, headphones, and more. All tested and functional.",
     price: 420,
     category: "electronics",
-    image: "https://images.unsplash.com/photo-1625842268584-8f3296236761?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
     badge: "New"
   },
   // Sportswear (10 items)
@@ -220,7 +223,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Gym wear, joggers, and athletic clothing. Comfortable and durable materials.",
     price: 390,
     category: "sportswear",
-    image: "https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   {
     id: "bale-026",
@@ -228,7 +231,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Quality running shoes from various brands. Good condition, ready for resale.",
     price: 620,
     category: "sportswear",
-    image: "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   {
     id: "bale-027",
@@ -236,7 +239,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Yoga pants, tops, and activewear. Stretchy, comfortable fabrics.",
     price: 340,
     category: "sportswear",
-    image: "https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   // Seasonal Items (10 items)
   {
@@ -245,7 +248,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Swimsuits, cover-ups, and beach accessories. Perfect for summer season.",
     price: 310,
     category: "seasonal",
-    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   {
     id: "bale-029",
@@ -253,7 +256,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Festive clothing and accessories. Great for holiday season resale.",
     price: 380,
     category: "seasonal",
-    image: "https://images.unsplash.com/photo-1512389142863-8c22296b7d24?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   {
     id: "bale-030",
@@ -261,7 +264,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "School uniforms, bags, and accessories. Sorted by age group.",
     price: 350,
     category: "seasonal",
-    image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   // Premium Featured Items (10 items)
   {
@@ -270,7 +273,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Premium branded items from luxury fashion houses. Excellent condition.",
     price: 1200,
     category: "premium",
-    image: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
     badge: "Premium"
   },
   {
@@ -279,7 +282,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Unique vintage pieces from the 90s and 2000s. Highly sought after by collectors.",
     price: 580,
     category: "premium",
-    image: "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
     badge: "Rare"
   },
   {
@@ -288,7 +291,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Popular streetwear brands including Supreme, Off-White, and more.",
     price: 950,
     category: "premium",
-    image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
     badge: "Hot"
   },
   {
@@ -297,7 +300,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Authentic designer handbags from top luxury brands. Authentication verified.",
     price: 1500,
     category: "premium",
-    image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
     badge: "Luxury"
   },
   {
@@ -306,7 +309,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Limited edition and rare sneakers. Deadstock and gently used.",
     price: 1100,
     category: "premium",
-    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   // Additional Mixed Items (10 items)
   {
@@ -315,7 +318,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Heavy-duty workwear including jeans, jackets, and boots. Built to last.",
     price: 410,
     category: "bales",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   {
     id: "bale-037",
@@ -323,7 +326,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Suits, evening gowns, and formal attire. Perfect for special occasions.",
     price: 560,
     category: "bales",
-    image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   {
     id: "bale-038",
@@ -331,7 +334,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Comfortable everyday clothing including t-shirts, jeans, and casual wear.",
     price: 340,
     category: "bales",
-    image: "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   {
     id: "bale-039",
@@ -339,7 +342,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Quality lingerie and underwear sets. Various sizes and styles.",
     price: 290,
     category: "bales",
-    image: "https://images.unsplash.com/photo-1562157873-818bc0726f68?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   },
   {
     id: "bale-040",
@@ -347,7 +350,7 @@ export const hardcodedProducts: HardcodedProduct[] = [
     description: "Trendy plus-size clothing in various styles. Inclusive sizing available.",
     price: 380,
     category: "bales",
-    image: "https://images.unsplash.com/photo-1594201182929-3c3fdd75b4c7?w=600&h=600&fit=crop",
+    image: NEW_IMAGE_URL,
   }
 ]
 
