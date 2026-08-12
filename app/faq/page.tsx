@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from "react"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { ChevronDown, ChevronLeft, ShieldCheck, Package, Truck, Sparkles } from "lucide-react"
@@ -109,11 +110,15 @@ const faqCategories = [
 ]
 
 export default function FAQPage() {
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0 })
+  }, [])
+
   return (
     <main className="min-h-screen overflow-x-hidden">
       <Header />
 
-      <div className="pt-24 pb-20">
+      <div className="pt-4 pb-20">
         <div className="max-w-4xl mx-auto px-6 lg:px-8">
           {/* Back button */}
           <button

@@ -127,6 +127,10 @@ function ShopPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0 })
+  }, [])
+
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get("category") || "all")
   const [sortBy, setSortBy] = useState("featured")
   const [isVisible, setIsVisible] = useState(false)

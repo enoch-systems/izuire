@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
@@ -8,6 +8,11 @@ import { Phone, Mail, MapPin, Clock, Send, CheckCircle2, MessageCircle, ChevronL
 
 export default function ContactPage() {
   const router = useRouter()
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0 })
+  }, [])
+
   const [formState, setFormState] = useState({
     name: "",
     email: "",
