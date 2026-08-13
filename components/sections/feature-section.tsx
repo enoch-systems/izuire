@@ -93,7 +93,7 @@ export function FeatureSection() {
           >
             {featureImages.map((image, index) => (
               <img
-                key={image}
+                key={`${image}-${index}`}
                 src={image}
                 alt="Why Choose IZUIRE"
                 className={`absolute inset-0 h-full w-full object-cover transition-all duration-700 ease-in-out ${
