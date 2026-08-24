@@ -32,9 +32,14 @@ export function Header({ variant = "default", onLogoutClick }: { variant?: "defa
         <div className="relative z-50 flex items-center justify-between py-[18px]">
           {/* Logo - Only show on non-admin pages */}
           {!isAdmin && (
-            <Link href="/" className="flex items-center gap-2.5">
+            <Link href="/" className="flex items-center">
+              <img
+                src="https://res.cloudinary.com/wglgwuwj/image/upload/v1787544012/logooo.png"
+                alt="IZUIRE logo"
+                className="size-11 object-contain"
+              />
               <h1 className="font-serif text-[1.3rem] tracking-[0.5px] text-foreground">IZUIRE</h1>
-              <span className="bg-primary text-background font-mono text-[0.7rem] px-2 py-[3px] -rotate-3 rounded-[2px]">
+              <span className="bg-primary text-background font-mono text-[0.7rem] px-2 py-[3px] -rotate-3 rounded-[2px] ml-2.5">
                 THRIFT
               </span>
             </Link>

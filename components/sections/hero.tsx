@@ -3,18 +3,27 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 
-const heroImages = [
-  "https://res.cloudinary.com/djdbcoyot/image/upload/v1786553251/gtnizvboye5kfupmx74k.jpg",
-  "https://res.cloudinary.com/djdbcoyot/image/upload/v1786553251/gtnizvboye5kfupmx74k.jpg",
+const heroVideos = [
+  { id: "hero-video-1", src: "https://res.cloudinary.com/wglgwuwj/video/upload/v1787583022/WhatsApp_Video_2026-08-24_at_5.12.04_AM.mp4" },
+  { id: "hero-video-2", src: "https://res.cloudinary.com/wglgwuwj/video/upload/v1787583347/WhatsApp_Video_2026-08-24_at_5.10.04_AM.mp4" },
 ]
 
 export function Hero() {
   const [desktopOrder, setDesktopOrder] = useState([0, 1])
+  const [mobileVideoIndex, setMobileVideoIndex] = useState(0)
 
   useEffect(() => {
     const timer = setInterval(() => {
       setDesktopOrder((current) => [current[1], current[0]])
     }, 2600)
+
+    return () => clearInterval(timer)
+  }, [])
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setMobileVideoIndex((current) => (current + 1) % heroVideos.length)
+    }, 4500)
 
     return () => clearInterval(timer)
   }, [])
@@ -94,29 +103,39 @@ export function Hero() {
       <div className="max-w-[1140px] mx-auto px-6 pb-14">
         <div className="hidden lg:flex h-full w-full gap-4">
           {desktopOrder.map((index) => (
-            <div key={`${heroImages[index]}-${index}`} className="h-64 flex-1 overflow-hidden rounded-lg transition-all duration-700 ease-in-out">
-              <img
-                src={heroImages[index]}
-                alt="IZUIRE premium thrift collection"
+            <div key={heroVideos[index].id} className="h-64 flex-1 overflow-hidden rounded-lg transition-all duration-700 ease-in-out">
+              <video
+                src={heroVideos[index].src}
+                aria-label="IZUIRE sourcing warehouse video"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
                 className="h-full w-full object-cover"
-                style={{
-                  objectPosition: "center center",
-                  filter: "saturate(0.9) contrast(1.02)",
-                }}
               />
             </div>
           ))}
         </div>
-        <div className="lg:hidden">
-          <img
-            src={heroImages[0]}
-            alt="IZUIRE premium thrift collection"
-            className="h-64 w-full object-cover rounded-lg"
-            style={{
-              objectPosition: "center center",
-              filter: "saturate(0.9) contrast(1.02)",
-            }}
-          />
+        <div className="lg:hidden h-64 overflow-hidden rounded-lg">
+          <div
+            className="flex h-full transition-transform duration-700 ease-in-out"
+            style={{ transform: `translateX(-${mobileVideoIndex * 100}%)` }}
+          >
+            {heroVideos.map((video) => (
+              <video
+                key={video.id}
+                src={video.src}
+                aria-label="IZUIRE sourcing warehouse video"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                className="h-full min-w-full object-cover"
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>

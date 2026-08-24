@@ -25,9 +25,14 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-14">
           {/* Brand */}
           <div className="col-span-2 md:col-span-2">
-            <div className="flex items-center gap-2.5 mb-4">
+            <div className="flex items-center mb-4">
+              <img
+                src="https://res.cloudinary.com/wglgwuwj/image/upload/v1787544012/logooo.png"
+                alt="IZUIRE logo"
+                className="size-11 object-contain"
+              />
               <h2 className="font-serif text-[1.3rem] tracking-[0.5px] text-foreground">IZUIRE</h2>
-              <span className="bg-primary text-background font-mono text-[0.7rem] px-2 py-[3px] -rotate-3 rounded-[2px]">
+              <span className="bg-primary text-background font-mono text-[0.7rem] px-2 py-[3px] -rotate-3 rounded-[2px] ml-2.5">
                 THRIFT
               </span>
             </div>

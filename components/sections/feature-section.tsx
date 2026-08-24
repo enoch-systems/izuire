@@ -3,16 +3,12 @@
 import { useEffect, useRef, useState } from "react"
 import { ShieldCheck, BadgeCheck } from "lucide-react"
 
-const featureImages = [
-  "https://res.cloudinary.com/djdbcoyot/image/upload/v1786553251/gtnizvboye5kfupmx74k.jpg",
-  "https://res.cloudinary.com/djdbcoyot/image/upload/v1786553251/gtnizvboye5kfupmx74k.jpg",
-]
+const featureVideo = "https://res.cloudinary.com/wglgwuwj/video/upload/v1787583323/WhatsApp_Video_2026-08-24_at_5.10.40_AM.mp4"
 
 export function FeatureSection() {
   const [isVisible, setIsVisible] = useState(false)
   const [isVideoVisible, setIsVideoVisible] = useState(false)
   const [headerVisible, setHeaderVisible] = useState(false)
-  const [activeImageIndex, setActiveImageIndex] = useState(0)
   const bentoRef = useRef<HTMLDivElement>(null)
   const videoSectionRef = useRef<HTMLDivElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
@@ -26,7 +22,7 @@ export function FeatureSection() {
       },
       { threshold: 0.1 }
     )
-
+  
     const videoObserver = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -70,14 +66,6 @@ export function FeatureSection() {
     }
   }, [])
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveImageIndex((current) => (current + 1) % featureImages.length)
-    }, 3200)
-
-    return () => clearInterval(timer)
-  }, [])
-
   return (
     <section className="bg-foreground text-background border-b border-border">
       <div className="max-w-[1140px] mx-auto px-6 py-16">
@@ -85,26 +73,22 @@ export function FeatureSection() {
           ref={videoSectionRef}
           className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center"
         >
-          {/* Image carousel */}
+          {/* Why Choose video */}
           <div
             className={`relative aspect-[4/5] overflow-hidden rounded-lg border border-background/15 transition-all duration-700 ease-out ${
               isVideoVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
             }`}
           >
-            {featureImages.map((image, index) => (
-              <img
-                key={`${image}-${index}`}
-                src={image}
-                alt="Why Choose IZUIRE"
-                className={`absolute inset-0 h-full w-full object-cover transition-all duration-700 ease-in-out ${
-                  index === activeImageIndex ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-6'
-                }`}
-                style={{
-                  objectPosition: 'center center',
-                  filter: 'saturate(0.9) contrast(1.02)',
-                }}
-              />
-            ))}
+            <video
+              className="absolute inset-0 h-full w-full object-cover"
+              src={featureVideo}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-label="IZUIRE sourcing and quality inspection"
+            />
           </div>
 
           {/* Content */}
