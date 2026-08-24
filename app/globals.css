@@ -5,7 +5,7 @@
 /* Ammie N — Editorial Thrift Theme (inspired by IZUIRE) */
 :root {
   /* Brand Colors: Paper, Ink, Rust, Mustard, Olive */
-  --background: #F7F3EC; /* Paper */
+  --background: #FFFFFF; /* Paper */
   --foreground: #1C1B1A; /* Ink */
   --card: #FFFFFF;
   --card-foreground: #1C1B1A;
@@ -13,16 +13,16 @@
   --popover-foreground: #1C1B1A;
   --primary: #C45A3B; /* Rust */
   --primary-foreground: #F7F3EC;
-  --secondary: #EFE8DB; /* Paper Soft */
+  --secondary: #FFFFFF; /* Paper Soft */
   --secondary-foreground: #1C1B1A;
-  --muted: #EFE8DB;
+  --muted: #FFFFFF;
   --muted-foreground: #6F6A63;
   --accent: #D4A95E; /* Mustard */
   --accent-foreground: #1C1B1A;
   --destructive: #C45A3B;
   --destructive-foreground: #F7F3EC;
   --border: rgba(28, 27, 26, 0.14);
-  --input: #EFE8DB;
+  --input: #FFFFFF;
   --ring: #C45A3B;
   --chart-1: #C45A3B; /* Rust */
   --chart-2: #D4A95E; /* Mustard */
